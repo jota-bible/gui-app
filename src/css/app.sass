@@ -1,0 +1,45 @@
+// app global css in Sass form
+html,
+body,
+#q-app
+  height: 100%
+  margin: 0
+
+.q-tooltip--style
+  font-size: 12px
+
+.text-disabled
+  color: var(--q-color-border)
+
+::selection
+  background-color: var(--q-color-selection)
+
+::-webkit-scrollbar
+  background: transparent
+  width: 10px
+
+::-webkit-scrollbar-thumb
+  background-color: var(--q-color-scrollbar-thumb)
+  background-clip: padding-box
+  border-radius: 10px
+  transition: background-color .32s ease-in-out
+
+::-webkit-scrollbar-thumb:hover
+  background-color: var(--q-color-scrollbar-thumb-hover)
+  border-radius: 10px
+
+body.body--dark
+  background: var(--q-color-background)
+  color: var(--q-color-foreground)
+
+  .q-list--dark, .q-item--dark, .q-field--dark .q-field__native, .q-field--dark .q-field__prefix,
+  .q-field--dark .q-field__suffix, .q-field--dark .q-field__inpu
+    color: var(--q-color-foreground)
+
+  .q-field--dark:not(.q-field--focused) .q-field__label, .q-field--dark .q-field__marginal, .q-field--dark .q-field__bottom
+    color: var(--q-color-foreground)
+
+  .q-field--dark .q-field__control:before,
+    border-color: var(--q-color-border)
+
+  
