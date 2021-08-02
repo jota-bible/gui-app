@@ -2,17 +2,17 @@
 
 Jota is a handy app to search and read the Bible. 
 
-Unique and most outstanding features of the app:
+Main features and design principles:
 1. Extremely flexible search - for example: "John 1", "J 1,2", "j 1 1 2 3-4", "any text J 1,1 containing references - Mt 2: 3-4", "faith", regular expressions: "/john|peter/".
-2. Can browse found verses in the context of an entire chapter.
-3. Copying passages with references to the clipboard formatted according to custom templates.
-4. Clear graphical design.
-5. Speed of operation - searching less than half a second, no pagination, all search results available at once, key navigation, changing of translation automatically changes the text of the displayed chapter and searched fragments.
-6. Remembers user settings in local storage to minimize repetition of some actions.
+1. Can browse found verses in the context of an entire chapter.
+1. Copying passages with references to the clipboard formatted according to custom templates.
+1. Clear, minimalistic graphical design.
+1. Speed of operation - searching less than half a second, no pagination, all search results available at once, key navigation, changing of translation automatically changes the text of the displayed chapter and searched fragments.
+1. Ergonomics - minimize the number of operation to perform the most common tasks. For example remembers user settings in local storage to minimize repetition of some actions.
 
 Major limitations:
 1. Originally designed for web on large displays with good internet speed. It is not optimized for mobile and poor internet.
-2. Supports only Polish language for the user interface at the moment.
+1. Supports only Polish language for the user interface at the moment.
 
 The app is hosted at [http://netanel.pl/jota](http://netanel.pl/jota).
 
@@ -28,29 +28,36 @@ Format of Bible translation is a zero-indexed, three dimensional array, where ap
 
 The user documentation in Polish is [here](https://docs.google.com/document/d/1unCVgpMRlzlaRRXdxdDkmNyVxqG7honM49lSKS9TTnU/edit#heading=h.xdw3mzx17rvr).
 
-## Install the dependencies
+## Development
+### Install the dependencies
 ```bash
 npm install
 ```
 A non-npm external dependency is [Bible Passage Reference Parser](https://github.com/openbibleinfo/Bible-Passage-Reference-Parser). Two language bundles of it (pl and en) are included in `src/static/bcv-parsers`. In order for the BCV Parser file to be consumable by Jota, the last two lines of need to be modified by replacing "this" with "window".
 
-## Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
 quasar dev
 ```
 
-## Build the app for production
+### Build the app for production
 ```bash
 quasar build -m pwa
 ```
 
-## Unit test
+### Unit test
 ```bash
 npm run test:unit
 ```
 
-## Customize the configuration
+### Customize the configuration
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Future plans
-[Roadmap](Roadmap.md)
+See [Roadmap.md](Roadmap.md)
+
+## Authors
+Jota app was created by [Jacek Kołodziejczyk](https://github.com/virtuecoder) and has contributions from [https://github.com/birdbird314](https://github.com/birdbird314).
+
+## Licence
+GNU General Public License v3.0 or later. See [Licence.txt](Licence.txt) for a full text.
