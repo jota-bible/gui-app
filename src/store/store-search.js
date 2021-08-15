@@ -16,7 +16,7 @@ const state = {
   progress: 0.0,
   searchTermHighlightRegex: '',
   searchTerm: '',
-  searchTermHighlightReplacement: '<b>$&</b>',
+  searchTermHighlightReplacement: '$1<span class="bold">$2</span>$3',
   separator: ':',
   shouldSort: false,
   words: true,

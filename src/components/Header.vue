@@ -116,14 +116,11 @@ export default mapAll('settings', {
 
 // Header background the same as the rest
 .q-layout__section--marginal
-  background: $background
-
-body.body--dark .q-layout__section--marginal
-  background: $background-dark
+  background: transparent
 
 // Make the toolbar responsive, the idea is to have as many buttons visible as possible
 // then menu show only when not all the buttons are bisible
-// Also element with lower priority like titles and lables to be hidden first 
+// Also element with lower priority like titles and lables to be hidden first
 @media (max-width: 510px)
   .q-toolbar__title
     display: none
@@ -142,4 +139,4 @@ body.body--dark .q-layout__section--marginal
 @media (max-width: 382px)
   #more
     display: inline-flex
-</style>style
+</style>

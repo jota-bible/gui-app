@@ -99,7 +99,7 @@
         <span v-if="layout === 'split'">
           <span v-if="chapterFragment">
             <span id="chapter-label" class="q-mr-sm">Wyświetlany rozdział:</span>
-            <span style="font-weight: bold">{{ chapterCaption }}</span>
+            <span class="bold q-mr-xs">{{ chapterCaption }}</span>
           </span>
 
           <q-btn-group v-if="chapterFragment" outline class="q-ml-sm">
@@ -189,7 +189,12 @@
         </div>
 
         <div id="formatted" class="row q-pb-md" v-if="layout === 'formatted'">
-          <div v-for="(s, i) in fragments" v-bind:key="i" class="formatted-verse" v-html="formatReference(i)" />
+          <div
+            v-for="(s, i) in fragments"
+            v-bind:key="i"
+            class="formatted-verse"
+            v-html="lineInFormattedSearchResults(i)"
+          />
         </div>
       </div>
     </q-page>
@@ -319,15 +324,18 @@ const definition = mapAll('search', {
         this.chapterFragment = [book, chapter, i, i]
       }
     },
+
     chapterFragmentVerseMoving(i) {
       if (this.mouseIsDown) {
         this.selectVerses(i)
       }
     },
+
     chapterFragmentEndVerse(i, event) {
       this.mouseIsDown = false
       this.selectVerses(i)
     },
+
     copyFound() {
       this.$store.commit('search/layout', 'formatted')
       this.$nextTick(() => {
@@ -344,6 +352,7 @@ const definition = mapAll('search', {
     find(input) {
       return this.findByInput(input)
     },
+
     focusChapterVerse(i) {
       if (i >= 0 && i < this.chapterVerses.length) {
         const [book, chapter] = this.chapterFragment
@@ -351,18 +360,24 @@ const definition = mapAll('search', {
         document.querySelector(`#chapter > div:nth-child(${i + 1})`).focus()
       }
     },
-    formatReference(i) {
-      return this.highlightSearchTerm(
-        jota.formatThreshold(
-          this.$store.getters['settings/thresholdFormats'],
-          this.fragments[i],
-          this.$store.state.bibles.content,
-          this.$store.getters['settings/books'],
-          this.separator,
-          this.$store.getters['bibles/symbol']
-        )
+
+    lineInFormattedSearchResults(i) {
+      // jota.formatThreshold(
+      //   this.$store.getters['settings/thresholdFormats'],
+      //   this.fragments[i],
+      //   this.$store.state.bibles.content,
+      //   this.$store.getters['settings/books'],
+      //   this.separator,
+      //   this.$store.getters['bibles/symbol']
+      // )
+      const bref = jota.formatReference(this.fragments[i], this.$store.getters['settings/books'], this.separator)
+      const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
+      const content = this.highlightSearchTerm(
+        jota.verses(this.$store.state.bibles.content, this.fragments[i]).join('\n')
       )
+      return `<span class="bref">${bref} ${symbol}</span> "${content}"`
     },
+
     highlightPassage(i, previousIndex) {
       const parent = document.getElementById('passages')
       if (previousIndex === undefined) previousIndex = this.fragmentIndex
@@ -378,8 +393,13 @@ const definition = mapAll('search', {
       }
       this.scrollToChapterFragment()
     },
+
     highlightSearchTerm(s) {
-      return `<span>${s.replace(this.searchTermHighlightRegex, this.searchTermHighlightReplacement)}</span>`
+      return `<span>${
+        this.searchTermHighlightRegex ?
+          s.replaceAll(this.searchTermHighlightRegex, this.searchTermHighlightReplacement) :
+          s
+      }</span>`
     },
 
     playAudio() {
@@ -468,7 +488,7 @@ main#search
     width: 100%
 
   .compact
-    padding: 0 8px 0 0
+    padding: 1px 8px 0 0
     min-height: 24px
 
   .formatted-verse
@@ -484,6 +504,7 @@ main#search
   display: flex
   flex-direction: column
   overflow: auto
+  width: 100%
 
   .row
     display: flex

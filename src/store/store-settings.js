@@ -90,7 +90,26 @@ mutations.darkMode = (state, value) => {
   state.darkMode = value
   Dark.set(value)
   saveToLocalStorage()
+  applyDarkMode()
+}
 
+const actions = {
+  init(context) {
+    if (context.state.darkMode !== undefined) {
+      context.commit('darkMode', context.state.darkMode)
+    }
+  },
+  save(context, payload) {
+    context.commit('mutate', payload)
+    saveToLocalStorage()
+  }
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem(localStorageKey, JSON.stringify(state))
+}
+
+function applyDarkMode() {
   if (Dark.isActive) {
     const primary = '#3b88d4'
     const foreground = '#bcc5cf'
@@ -114,22 +133,6 @@ mutations.darkMode = (state, value) => {
     colors.setBrand('scrollbar-thumb', colors.lighten(background, -15))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, -30))
   }
-}
-
-const actions = {
-  init(context) {
-    if (context.state.darkMode !== undefined) {
-      context.commit('darkMode', context.state.darkMode)
-    }
-  },
-  save(context, payload) {
-    context.commit('mutate', payload)
-    saveToLocalStorage()
-  }
-}
-
-function saveToLocalStorage() {
-  localStorage.setItem(localStorageKey, JSON.stringify(state))
 }
 
 export default {

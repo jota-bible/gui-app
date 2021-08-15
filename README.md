@@ -1,6 +1,6 @@
 ## Introduction
 
-Jota is a handy app to search and read the Bible. 
+Jota brings an excellent UX to read and search Bible. Can be deployed as a web, desktop, PWA and mobile app.
 
 Main features and design principles:
 1. Extremely flexible search - for example: "John 1", "J 1,2", "j 1 1 2 3-4", "any text J 1,1 containing references - Mt 2: 3-4", "faith", regular expressions: "/john|peter/".
@@ -26,7 +26,7 @@ Format of Bible translation is a zero-indexed, three dimensional array, where ap
 
 ## Documentation
 
-The user documentation in Polish is [here](https://docs.google.com/document/d/1unCVgpMRlzlaRRXdxdDkmNyVxqG7honM49lSKS9TTnU/edit#heading=h.xdw3mzx17rvr).
+The user documentation is in Polish [here](https://docs.google.com/document/d/1unCVgpMRlzlaRRXdxdDkmNyVxqG7honM49lSKS9TTnU/edit#heading=h.xdw3mzx17rvr).
 
 ## Development
 ### Install the dependencies

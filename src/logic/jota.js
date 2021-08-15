@@ -292,7 +292,7 @@ const jota = {
     let regex
     if (words) {
       const notWord = '[^a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]'
-      regex = new RegExp(`(^|${notWord})${text}($|${notWord})`, 'i')
+      regex = new RegExp(`(^|${notWord})(${text})($|${notWord})`, 'i')
     } else {
       regex = new RegExp(text, 'i')
     }
@@ -384,6 +384,16 @@ const jota = {
       }
       return arr
     }
+  },
+
+  verses(bible, fragment) {
+    const [bi, ci, si, ei] = fragment
+    const content = bible[bi][ci]
+    if (!content) return ''
+
+    const start = isNaN(si) ? 1 : si + 1
+    const end = isNaN(ei) ? isNaN(si) ? content.length : si + 1 : ei + 1
+    return content.slice(start - 1, end)
   },
 
   /**
