@@ -75,7 +75,7 @@ module.exports = function (ctx) {
       env: ctx.dev ? { // so on dev we'll have
         GTM_UA: '',
         GTM_G: ''
-      } : (require('./local.conf.js') || {}).gtm
+      } : (require('./local.conf.js') || {}).gtm,
 
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
@@ -98,6 +98,9 @@ module.exports = function (ctx) {
       //     }
       //   })
       // }
+      extendWebpack (cfg) {
+        cfg.devtool = 'source-map'
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer

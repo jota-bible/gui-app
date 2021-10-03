@@ -12,7 +12,6 @@ const state = {
   fragmentIndex: -1,
   input: '',
   layout: 'split',
-  listenersRegistered: false, // To avoid multiple listeners when hot reloading
   progress: 0.0,
   searchTermHighlightRegex: '',
   searchTerm: '',
@@ -32,6 +31,8 @@ const getters = {
     return rootGetters['settings/formatted'](state.chapterFragment, state.separator)
   },
   found: state => !!state.fragments.length,
+  highlightSearchTerm: state => s => state.searchTermHighlightRegex ?
+    s.replace(state.searchTermHighlightRegex, state.searchTermHighlightReplacement) : s,
   passages: (state, getters) =>
     state.fragments.map(osisRef => jota.formatReference(osisRef, getters.books, state.separator)),
 }
@@ -114,6 +115,8 @@ const actions = {
       beforeFragmentCount < 2 ? context.rootState.settings.defaultSearchResultLayout :
       context.state.layout
     context.commit('layout', layout)
+    const searchReplacement = words ? '$1<span class="bold">$2</span>$3' : '<span class="bold">$1</span>'
+    context.commit('searchTermHighlightReplacement', searchReplacement)
     context.commit('searchTermHighlightRegex', jota.highlightRegex(progress.regex))
     context.commit('fragments', fragments)
     console.log(`Search took ${Date.now() - t0} ms`)

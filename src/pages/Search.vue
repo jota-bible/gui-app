@@ -176,13 +176,10 @@
               :class="verseClass(i)"
               class="compact"
               tabIndex="0"
-              @mousedown.left="chapterFragmentStartVerse(i, $event)"
-              @mouseover.left="chapterFragmentVerseMoving(i)"
-              @mouseup.left="chapterFragmentEndVerse(i)"
               @keyup.left="focusChapterVerse(i - 1)"
               @keyup.right="focusChapterVerse(i + 1)"
             >
-              <q-item-section class="reference text-primary">{{ i + 1 }}</q-item-section>
+              <q-item-section class="reference text-secondary">{{ i + 1 }}</q-item-section>
               <q-item-section class="verse" v-html="highlightSearchTerm(s)"></q-item-section>
             </q-item>
           </q-list>
@@ -220,7 +217,11 @@ const definition = mapAll('search', {
         primary: colors.getPaletteColor('primary'),
         disabled: 'rgba(0, 0, 0, 0.54)',
       },
+      globalListeners: [],
       mouseIsDown: false,
+      scrollToSelection: true,
+      selectionStart: -1,
+      selectionEnd: -1,
     }
   },
   computed: {
@@ -245,12 +246,15 @@ const definition = mapAll('search', {
   },
   watch: {
     chapterFragment() {
-      const chapter = document.getElementById('chapter')
-      if (chapter) chapter.scrollTop = 0
-      if (this.audioOn) {
-        this.audioPlayer.load()
-        this.audioPlayer.play()
+      if (this.scrollToSelection) {
+        const chapter = document.getElementById('chapter')
+        if (chapter) chapter.scrollTop = 0
+        if (this.audioOn) {
+          this.audioPlayer.load()
+          this.audioPlayer.play()
+        }
       }
+      this.scrollToSelection = true
     },
     fragmentIndex(index, previousIndex) {
       // Scroll to show current fragment index verses in the view port
@@ -272,31 +276,55 @@ const definition = mapAll('search', {
       this.$refs.input.focus()
     },
   },
+
   mounted() {
-    if (!this.listenersRegistered) {
-      this.listenersRegistered = true
-
-      window.addEventListener('keydown', event => {
-        if (event.ctrlKey || event.metaKey) {
-          switch (event.key) {
-            case 'c':
-              if (!window.getSelection().toString()) {
-                this.copySelected()
-              }
-              break
-            case 'ArrowLeft':
-              this.adjacentChapter(-1)
-              break
-            case 'ArrowRight':
-              this.adjacentChapter(1)
-              break
-          }
+    const listener1 = event => {
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case 'c':
+            if (!window.getSelection().toString()) {
+              this.copySelected()
+            }
+            break
+          case 'ArrowLeft':
+            this.adjacentChapter(-1)
+            break
+          case 'ArrowRight':
+            this.adjacentChapter(1)
+            break
         }
-      })
-
-      const events = [('orientationchange', 'resize')]
-      events.forEach(eventType => window.addEventListener(eventType, this.updateSizes))
+      }
     }
+    window.addEventListener('keydown', listener1)
+    this.globalListeners.push(['keydown', listener1])
+
+    const listener2 = () => {
+      const sel = document.getSelection()
+      const node1 = sel.baseNode.parentElement.closest('#chapter .q-item')
+      const node2 = sel.extentNode.parentElement.closest('#chapter .q-item')
+      if (node1) {
+        const siblings = Array.from(node1.parentElement.children)
+        const index1 = siblings.indexOf(node1)
+        const index2 = siblings.indexOf(node2)
+
+        this.scrollToSelection = false
+        const [book, chapter] = this.chapterFragment
+        if (index1 < index2) {
+          this.chapterFragment = [book, chapter, index1, index2]
+        } else {
+          this.chapterFragment = [book, chapter, index2, index1]
+        }
+      }
+    }
+    document.addEventListener('selectionchange', listener2)
+    this.globalListeners.push(['selectionchange', listener2])
+
+    const events = [('orientationchange', 'resize')]
+    events.forEach(eventType => {
+      const listener = window.addEventListener(eventType, this.updateSizes)
+      this.globalListeners.push([eventType, listener])
+    })
+
     if (this.$route.query.q) {
       this.input = this.$route.query.q
     }
@@ -311,31 +339,11 @@ const definition = mapAll('search', {
   },
 
   destroyed() {
+    this.removeListeners()
     document.body.style.overflowY = 'auto'
   },
 
   methods: {
-    chapterFragmentStartVerse(i, event) {
-      if (event.shiftKey) {
-        this.chapterFragmentEndVerse(i)
-      } else {
-        this.mouseIsDown = true
-        const [book, chapter] = this.chapterFragment
-        this.chapterFragment = [book, chapter, i, i]
-      }
-    },
-
-    chapterFragmentVerseMoving(i) {
-      if (this.mouseIsDown) {
-        this.selectVerses(i)
-      }
-    },
-
-    chapterFragmentEndVerse(i, event) {
-      this.mouseIsDown = false
-      this.selectVerses(i)
-    },
-
     copyFound() {
       this.$store.commit('search/layout', 'formatted')
       this.$nextTick(() => {
@@ -362,14 +370,6 @@ const definition = mapAll('search', {
     },
 
     lineInFormattedSearchResults(i) {
-      // jota.formatThreshold(
-      //   this.$store.getters['settings/thresholdFormats'],
-      //   this.fragments[i],
-      //   this.$store.state.bibles.content,
-      //   this.$store.getters['settings/books'],
-      //   this.separator,
-      //   this.$store.getters['bibles/symbol']
-      // )
       const bref = jota.formatReference(this.fragments[i], this.$store.getters['settings/books'], this.separator)
       const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
       const content = this.highlightSearchTerm(
@@ -394,14 +394,6 @@ const definition = mapAll('search', {
       this.scrollToChapterFragment()
     },
 
-    highlightSearchTerm(s) {
-      return `<span>${
-        this.searchTermHighlightRegex ?
-          s.replaceAll(this.searchTermHighlightRegex, this.searchTermHighlightReplacement) :
-          s
-      }</span>`
-    },
-
     playAudio() {
       this.audioOn = !this.audioOn
       if (this.audioOn) {
@@ -410,6 +402,14 @@ const definition = mapAll('search', {
       } else {
         this.audioPlayer.pause()
       }
+    },
+
+    removeListeners() {
+      this.globalListeners.forEach(([eventType, listener]) => {
+        // window.removeEventListener(eventType, listener)
+        document.removeEventListener(eventType, listener)
+      })
+      this.globalListeners = []
     },
 
     scrollToChapterFragment() {
@@ -438,7 +438,18 @@ const definition = mapAll('search', {
       })
     },
 
+    // selectVerses() {
+    //   this.scrollToSelection = false
+    //   const [book, chapter] = this.chapterFragment
+    //   if (this.selectionStart <= this.selectionEnd) {
+    //     this.chapterFragment = [book, chapter, this.selectionStart, this.selectionEnd]
+    //   } else {
+    //     this.chapterFragment = [book, chapter, this.selectionEnd, this.selectionStart]
+    //   }
+    // },
+
     selectVerses(i) {
+      this.scrollToSelection = false
       const [book, chapter, start, end] = this.chapterFragment
       if (i <= start) {
         this.chapterFragment = [book, chapter, i, end]

@@ -83,6 +83,12 @@ describe('Jota', () => {
       [1, 0],
     ])
   })
+
+  it('search', async () => {
+    // expect(jota.search([0, 0], bookNames, ':')).toBe('Gen 1')
+    const progress = { step: value => {} }
+    expect(await jota.search([[['abc de']]], 'b', ':', false, '', false, progress)).toStrictEqual([[0, 0, 0, 0]])
+  })
 })
 
 // function formatReference(indexes) {

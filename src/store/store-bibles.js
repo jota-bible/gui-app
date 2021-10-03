@@ -40,14 +40,16 @@ const meta = [{
     symbol: 'nlt',
     title: 'New Living Translation'
   },
-].filter(m => {
-  try {
-    require(`../statics/data/${m.lang}/${m.symbol}.json`)
-    return true
-  } catch (e) {
-    return false
-  }
-})
+]
+// This causes the local bibles to be included in the app.js
+// .filter(m => {
+//   try {
+//     require(`../statics/data/${m.lang}/${m.symbol}.json`)
+//     return true
+//   } catch (e) {
+//     return false
+//   }
+// })
 
 const bibleLoading = [
   [

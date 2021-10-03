@@ -294,7 +294,7 @@ const jota = {
       const notWord = '[^a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]'
       regex = new RegExp(`(^|${notWord})(${text})($|${notWord})`, 'i')
     } else {
-      regex = new RegExp(text, 'i')
+      regex = new RegExp(`(${text})`, 'i')
     }
     return jota.searchContent(regex, bible, progress)
   },

@@ -1,6 +1,5 @@
 # Bugs
-1. Marking verse ranges during selection fails on mobile, it is marking incorrect range.
-2. Handle errors when entering incorrect regular expression errors in the search box.
+1. Handle errors when entering incorrect regular expression errors in the search box.
 
 # Features
 

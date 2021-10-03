@@ -4,6 +4,7 @@
 
 export default [
 {
+  // https://pricejh.com/readingplan/cplans/all_plans.html
   name: 'Biblia + Psalmy + Przypowieści',
   steps: 365,
   description: 'Ten plan obejmuje całą Biblię w ciągu roku począwszy od Nowego Testamentu. Ponadto będziesz czytać z Psalmów i Przysłów. Billy Graham powiedział: „Kiedy czytam codziennie pięć psalmów - to uczy mnie, jak żyć w zgodzie z Bogiem. Wtedy gdy czytam codziennie rozdział Księgi Przysłów, to uczy mnie, jak się dogadać z moim kolegą”.',

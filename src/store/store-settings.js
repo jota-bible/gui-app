@@ -112,23 +112,32 @@ function saveToLocalStorage() {
 function applyDarkMode() {
   if (Dark.isActive) {
     const primary = '#3b88d4'
+    const secondary = '#61B0FF'
+    const accent = '#D49B3B'
     const foreground = '#bcc5cf'
     const background = '#252525'
     colors.setBrand('primary', primary)
+    colors.setBrand('secondary', secondary)
+    colors.setBrand('accent', accent)
     colors.setBrand('foreground', foreground)
     colors.setBrand('background', background)
-    colors.setBrand('selection', primary)
+    colors.setBrand('selection', colors.lighten(primary, -50))
     colors.setBrand('border', colors.lighten(background, 20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, 10))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, 20))
   } else {
     const primary = '#1976D2'
+    const secondary = '#1976D2'
+    const secondary1 = '#0A5CAD'
+    const accent = '#D18C19'
     const foreground = '#000000'
     const background = '#ffffff'
     colors.setBrand('primary', primary)
+    colors.setBrand('secondary', secondary)
+    colors.setBrand('accent', accent)
     colors.setBrand('foreground', foreground)
     colors.setBrand('background', background)
-    colors.setBrand('selection', colors.lighten(primary, 70))
+    colors.setBrand('selection', colors.lighten(primary, 85))
     colors.setBrand('border', colors.lighten(background, -20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, -15))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, -30))

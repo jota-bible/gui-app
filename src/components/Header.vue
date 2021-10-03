@@ -6,7 +6,7 @@
 
       <!-- Show only on the main page -->
       <div class="row no-wrap items-center" v-if="isMainRoute">
-        <span id="translation-label" class="q-mr-sm"> Przekład: </span>
+        <span id="translation-label" class="text-secondary q-mr-sm"> Przekład: </span>
         <Bibles v-model="currentBible" class="q-pr-sm" />
 
         <!-- Reading plan -->
