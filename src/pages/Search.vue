@@ -12,11 +12,17 @@
         @keyup.esc="input = ''"
       >
         <template v-slot:append>
-          <q-icon v-if="input !== ''" name="close" @click="find('')" class="cursor-pointer" style="font-size: 0.8em">
+          <q-icon
+            v-if="input !== ''"
+            name="icon-mat-close"
+            @click="find('')"
+            class="cursor-pointer"
+            style="font-size: 0.8em"
+          >
             <q-tooltip>Wyczyść kryteria i wyniki wyszukiwania</q-tooltip>
           </q-icon>
 
-          <q-icon name="search" @click="find(input)" class="cursor-pointer">
+          <q-icon name="icon-mat-search" @click="find(input)" class="cursor-pointer">
             <q-tooltip>Szukaj</q-tooltip>
           </q-icon>
         </template>
@@ -26,7 +32,7 @@
           <q-btn
             dense
             flat
-            icon="mdi-arrow-expand-horizontal"
+            icon="icon-mdi-arrow-expand-horizontal"
             @click="words = !words"
             :text-color="words ? 'primary' : 'disabled'"
           >
@@ -53,14 +59,14 @@
           Znaleziono fragmentów:
           <span style="font-weight: bold">{{ passages.length }}</span>
 
-          <q-btn outline dense class="q-mx-sm" icon="mdi-content-copy" @click="copyFound">
+          <q-btn outline dense class="q-mx-sm" icon="icon-mdi-content-copy" @click="copyFound">
             <q-tooltip>Kopiuj znalezione wersety do schowka</q-tooltip>
           </q-btn>
 
           <q-btn
             outline
             dense
-            icon="vertical_split"
+            icon="icon-mat-vertical_split"
             text-color="primary"
             @click="layout = 'split'"
             v-show="layout === 'formatted'"
@@ -71,7 +77,7 @@
           <q-btn
             outline
             dense
-            icon="view_agenda"
+            icon="icon-mat-view_agenda"
             text-color="primary"
             @click="layout = 'formatted'"
             v-show="layout === 'split'"
@@ -83,7 +89,7 @@
             outline
             dense
             class="q-mx-sm"
-            icon="las la-sort-numeric-down"
+            icon="icon-la-sort-numeric-down"
             @click="sortAndDeduplicate"
             :text-color="shouldSort ? 'primary' : 'disabled'"
           >
@@ -104,11 +110,11 @@
 
           <q-btn-group v-if="chapterFragment" outline class="q-ml-sm">
             <!-- Previous chapter -->
-            <q-btn outline dense text-color="primary" icon="navigate_before" @click="adjacentChapter(-1)">
+            <q-btn outline dense text-color="primary" icon="icon-mat-navigate_before" @click="adjacentChapter(-1)">
               <q-tooltip>Poprzedni rozdział</q-tooltip>
             </q-btn>
             <!-- Next chapter -->
-            <q-btn outline dense text-color="primary" icon="navigate_next" @click="adjacentChapter(1)">
+            <q-btn outline dense text-color="primary" icon="icon-mat-navigate_next" @click="adjacentChapter(1)">
               <q-tooltip>Następny rozdział</q-tooltip>
             </q-btn>
           </q-btn-group>
@@ -118,7 +124,7 @@
             dense
             text-color="primary"
             class="q-ml-sm"
-            icon="mdi-content-copy"
+            icon="icon-mdi-content-copy"
             @click="copySelected"
             v-show="chapterFragment && !isNaN(chapterFragment[2])"
           >
@@ -132,7 +138,7 @@
             dense
             text-color="primary"
             class="q-ml-sm"
-            icon="volume_up"
+            icon="icon-mat-volume_up"
             @click="playAudio"
           >
             <q-tooltip>Odtwórz rodział w wersji audio</q-tooltip>
@@ -345,18 +351,22 @@ const definition = mapAll('search', {
 
   methods: {
     copyFound() {
+      const prevLayout = this.$store.state.search.layout
       this.$store.commit('search/layout', 'formatted')
       this.$nextTick(() => {
         copyTextToClipboard(document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n'))
+        this.$store.commit('search/layout', prevLayout)
         this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
       })
     },
+
     copySelected() {
       if (this.formattedSelected.length) {
         copyTextToClipboard(this.formattedSelected)
         this.$q.notify({ message: 'Skopiowano zaznaczone wersety do schowka', group: false })
       }
     },
+
     find(input) {
       return this.findByInput(input)
     },

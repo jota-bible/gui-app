@@ -10,7 +10,7 @@
         <Bibles v-model="currentBible" class="q-pr-sm" />
 
         <!-- Reading plan -->
-        <q-btn id="reading-plan" flat dense icon="playlist_add_check" to="/reading-plan">
+        <q-btn id="reading-plan" flat dense icon="icon-mat-playlist_add_check" to="/reading-plan">
           <q-tooltip> Plan czytania </q-tooltip>
         </q-btn>
 
@@ -19,7 +19,7 @@
           id="help"
           flat
           dense
-          icon="help"
+          icon="icon-mat-help"
           type="a"
           href="https://docs.google.com/document/d/1unCVgpMRlzlaRRXdxdDkmNyVxqG7honM49lSKS9TTnU"
           target="_blank"
@@ -28,7 +28,7 @@
         </q-btn>
 
         <!-- Settings -->
-        <q-btn id="settings" flat dense icon="settings" to="/settings">
+        <q-btn id="settings" flat dense icon="icon-mat-settings" to="/settings">
           <q-tooltip> Ustawienia </q-tooltip>
         </q-btn>
 

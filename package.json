@@ -16,7 +16,9 @@
     "test:unit:watchAll": "jest --watchAll",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
     "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
-    "test:unit:clear": "jest --clearCache"
+    "test:unit:clear": "jest --clearCache",
+    "custom-icons": "fantasticon src/custom-icons/svg -o src/statics/custom-icons --normalize -t woff woff2 -g css",
+    "custom-icons:watch": "watch 'npm run custom-icons' src/custom-icons/svg"
   },
   "dependencies": {
     "quasar": "^1.15.4",

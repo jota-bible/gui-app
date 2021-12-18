@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import customIcons from 'src/custom-icons/custom-icons.js'
+
 export default {
   name: 'App',
   created() {
@@ -13,6 +15,7 @@ export default {
     if (lastRoute && !window.location.search) {
       this.$router.push(lastRoute)
     }
+    this.$q.iconSet.set(customIcons)
   },
   watch: {
     $route(to, from) {

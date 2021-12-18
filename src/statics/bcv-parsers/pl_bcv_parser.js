@@ -3205,7 +3205,7 @@
       },
       {
         osis: ["Eccl"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:K(?:s(?:i[eę]g[ai][\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes)|\\.[\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes)|[\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes))a|aznodziei[\\s\\xa0]*Salomonowego|ohelet|azn?|oh|z)|E(?:cc|k)l))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:K(?:s(?:i[eę]g[ai][\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes)|\\.[\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes)|[\\s\\xa0]*(?:K(?:aznodziei[\\s\\xa0]*Salomon|ohelet)|Eklezjastes))a|aznodziei(?:[\\s\\xa0]*Salomonowego)?|ohelet|azn?|oh|z)|E(?:cc|k)l))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {
