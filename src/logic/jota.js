@@ -316,6 +316,7 @@ const jota = {
     parser.set_options({
       punctuation_strategy: separator === ',' ? 'eu' : 'us',
       versification_system: translation,
+      consecutive_combination_strategy: 'separate',
     })
     parser.parse(text)
     return parser.osis()

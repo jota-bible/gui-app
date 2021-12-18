@@ -3301,7 +3301,7 @@
       },
       {
         osis: ["Mark"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ew(?:angelia[\\s\\xa0]*(?:w(?:edług[\\s\\xa0]*[sś]w\\.?|g[\\s\\xa0]*[sś]w\\.?)[\\s\\xa0]*)?Marka|\\.[\\s\\xa0]*Marka|[\\s\\xa0]*Mar(?:ka)?)|M(?:ar(?:ka|ek)|ark?|k)))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ew(?:angelia[\\s\\xa0]*(?:w(?:edług[\\s\\xa0]*[sś]w\\.?|g[\\s\\xa0]*[sś]w\\.?)[\\s\\xa0]*)?Marka|\\.[\\s\\xa0]*Marka|[\\s\\xa0]*Mar(?:ka)?)|M(?:ar(?:ka|ek)|ark?|k|r)))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

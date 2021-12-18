@@ -7,7 +7,6 @@
 
 ## General
 1. Defining the scope of the search, in which books, old/new testament.
-1. Option to copy only references from the search results.
 1. i18n
 1. Option to include words highlighting in the verses using markdown or HTML format.
 1. Highlighting the lookup in the search primary color with continuous layout?

@@ -350,14 +350,32 @@ const definition = mapAll('search', {
   },
 
   methods: {
-    copyFound() {
+    copyFound(e) {
+      // const prevLayout = this.$store.state.search.layout
+      // this.$store.commit('search/layout', 'formatted')
+      // this.$nextTick(() => {
+      //   copyTextToClipboard(document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n'))
+      //   this.$store.commit('search/layout', prevLayout)
+      //   this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
+      // })
+
       const prevLayout = this.$store.state.search.layout
-      this.$store.commit('search/layout', 'formatted')
-      this.$nextTick(() => {
-        copyTextToClipboard(document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n'))
-        this.$store.commit('search/layout', prevLayout)
-        this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
-      })
+      if (e.metaKey || e.ctrolKey) {
+        this.$store.commit('search/layout', 'split')
+        this.$nextTick(() => {
+          copyTextToClipboard(
+            Array.from(document.querySelectorAll('#passages > div')).map(e => e.innerText).join(';'))
+          this.$store.commit('search/layout', prevLayout)
+          this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
+        })
+      } else {
+        this.$store.commit('search/layout', 'formatted')
+        this.$nextTick(() => {
+          copyTextToClipboard(document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n'))
+          this.$store.commit('search/layout', prevLayout)
+          this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
+        })
+      }
     },
 
     copySelected() {
