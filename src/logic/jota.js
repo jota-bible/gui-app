@@ -378,7 +378,7 @@ const jota = {
       const arr = [a]
       for (let i = 1; i < fragments.length; i++) {
         const b = fragments[i]
-        if (!(a[0] === b[0] && a[1] === b[1] && a[0] === b[1])) {
+        if (!(a[0] === b[0] && a[1] === b[1] && (a[2] === b[2] || (isNaN(a[2]) && isNaN(b[2]))))) {
           arr.push(b)
         }
         a = b

@@ -1,7 +1,6 @@
 # Bugs
 1. Handle errors when entering incorrect regular expression errors in the search box.
-2. Deduplication does not work
-3. Search references with mixed punctuation ':', ','
+1. Search references with mixed punctuation ':', ','
 
 # Features
 
