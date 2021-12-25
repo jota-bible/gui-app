@@ -279,8 +279,18 @@ const jota = {
     if (text.startsWith('/')) {
       const end = text.lastIndexOf('/')
       // If there is no regex flags add "gi" automatically
-      const flags = end === text.length - 1 ? 'gi' : text.substr(end + 1, text.length)
-      return jota.searchContent(new RegExp(text.substr(1, end - 1), flags), bible, progress)
+      const flags = end === text.length - 1 ? 'gi' : text.substring(end + 1, text.length)
+      let regex
+      let error
+      try {
+        regex = new RegExp(`(${text.substring(1, end)})`, flags)
+      } catch (ex) {
+        error = ex
+      }
+      if (error || !regex) {
+        throw Error(`Niepoprawne wyrażenie regularne RegExp(${text.substring(1, end)}, ${flags})${error ? ', ' + error : ''}`)
+      }
+      return jota.searchContent(regex, bible, progress)
     }
 
     // Otherwise try to find passage references

@@ -54,7 +54,7 @@
           size="sm"
           indeterminate
         />
-        <span v-if="progress > 0">Szukam... </span>
+        <span v-if="progress > 0">Szukam...</span>
         <span v-else-if="passages.length > 1">
           Znaleziono fragmentów:
           <span style="font-weight: bold">{{ passages.length }}</span>
@@ -97,9 +97,11 @@
           </q-btn>
         </span>
 
-        <span v-else-if="passages.length === 0 && !chapterFragment && searchTerm !== ''"
-          >Nic takiego nie znaleziono :-(</span
-        >
+        <span v-else-if="error">{{ error }}</span>
+
+        <span
+          v-else-if="passages.length === 0 && !chapterFragment && searchTerm !== ''"
+        >Nic takiego nie znaleziono :-(</span>
 
         <!-- Passage displayed -->
         <span v-if="layout === 'split'">
@@ -110,11 +112,23 @@
 
           <q-btn-group v-if="chapterFragment" outline class="q-ml-sm">
             <!-- Previous chapter -->
-            <q-btn outline dense text-color="primary" icon="icon-mat-navigate_before" @click="adjacentChapter(-1)">
+            <q-btn
+              outline
+              dense
+              text-color="primary"
+              icon="icon-mat-navigate_before"
+              @click="adjacentChapter(-1)"
+            >
               <q-tooltip>Poprzedni rozdział</q-tooltip>
             </q-btn>
             <!-- Next chapter -->
-            <q-btn outline dense text-color="primary" icon="icon-mat-navigate_next" @click="adjacentChapter(1)">
+            <q-btn
+              outline
+              dense
+              text-color="primary"
+              icon="icon-mat-navigate_next"
+              @click="adjacentChapter(1)"
+            >
               <q-tooltip>Następny rozdział</q-tooltip>
             </q-btn>
           </q-btn-group>
@@ -148,8 +162,7 @@
       <!-- End of message line -->
 
       <audio controls id="audio-player" n="1" v-show="audioOn">
-        <source :src="audioSource" type="audio/mpeg" />
-        Twoja przeglądarka nie obsługuje słuchania audio :/
+        <source :src="audioSource" type="audio/mpeg" />Twoja przeglądarka nie obsługuje słuchania audio :/
       </audio>
 
       <div v-show="loading">
@@ -165,14 +178,12 @@
               v-for="(item, index) in passages"
               :key="index"
               clickable
-              tabIndex="0"
+              tabindex="0"
               @click="highlightPassage(index)"
               @keyup.prevent.stop.left="highlightPassage(fragmentIndex - 1)"
               @keyup.prevent.stop.right="highlightPassage(fragmentIndex + 1)"
               class="q-item q-item-type row no-wrap compact q-item--clickable q-link cursor-pointer"
-            >
-              {{ item }}
-            </div>
+            >{{ item }}</div>
           </div>
 
           <q-list id="chapter" class="col bottom-clipped full-width" v-if="chapterVerses.length">
@@ -181,7 +192,7 @@
               :key="i"
               :class="verseClass(i)"
               class="compact"
-              tabIndex="0"
+              tabindex="0"
               @keyup.left="focusChapterVerse(i - 1)"
               @keyup.right="focusChapterVerse(i + 1)"
             >

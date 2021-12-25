@@ -1,16 +1,15 @@
 # Bugs
-1. Handle errors when entering incorrect regular expression errors in the search box.
-1. Search references with mixed punctuation ':', ','
 
 # Features
 
 ## General
-1. Defining the scope of the search, in which books, old/new testament.
-1. i18n
-1. Option to include words highlighting in the verses using markdown or HTML format.
-1. Highlighting the lookup in the search primary color with continuous layout?
-1. Edit the list of search results by adding and removing verses from it
-1. Mouse free operating, configurable keyboard shortcuts
+1. Search references with mixed punctuation ':', ','
+2. Defining the scope of the search, in which books, old/new testament.
+3. i18n
+4. Option to include words highlighting in the verses using markdown or HTML format.
+5. Highlighting the lookup in the search primary color with continuous layout?
+6. Edit the list of search results by adding and removing verses from it
+7. Mouse free operating, configurable keyboard shortcuts
 
 ## Server side services
 1. Comparison of a passage in different translations. Service more suitable than fetching multiple translations at one to the client and than comparing them.

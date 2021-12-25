@@ -8,6 +8,7 @@ const values = {
 const state = {
   chapter: [],
   chapterFragment: [0, 0],
+  error: '',
   fragments: [],
   fragmentIndex: -1,
   input: '',
@@ -52,6 +53,9 @@ const mutations = defaultMutations(state, {
   }) {
     state.chapter = jota.chapterVerses(bible, fragment)
     state.chapterFragment = fragment
+  },
+  error(state, payload) {
+    state.error = payload
   },
   fragments(state, payload) {
     state.fragments = payload
@@ -102,24 +106,31 @@ const actions = {
     }
     const { separator, words, shouldSort } = context.state
     context.commit('progress', 0.1)
-    const fragments = Object.freeze(
-      await jota.search(bible, text, separator, words, translation, shouldSort, progress))
-    context.commit('progress', 0)
+    context.commit('error', '')
+    try {
+      const fragments = Object.freeze(
+        await jota.search(bible, text, separator, words, translation, shouldSort, progress))
 
-    // Layout decision matrix
-    // Fragments count | Previous fragment count | Current Layout | Default layout | Result layout
-    // 0-1             |                         |                 |                | split
-    // > 1             | < 2                     |                 | x              | x
-    // > 1             | >= 2                    | x               |                | x
-    const layout = fragments.length < 2 ? 'split' :
-      beforeFragmentCount < 2 ? context.rootState.settings.defaultSearchResultLayout :
-      context.state.layout
-    context.commit('layout', layout)
-    const searchReplacement = words ? '$1<span class="bold">$2</span>$3' : '<span class="bold">$1</span>'
-    context.commit('searchTermHighlightReplacement', searchReplacement)
-    context.commit('searchTermHighlightRegex', jota.highlightRegex(progress.regex))
-    context.commit('fragments', fragments)
-    console.log(`Search took ${Date.now() - t0} ms`)
+      // Layout decision matrix
+      // Fragments count | Previous fragment count | Current Layout | Default layout | Result layout
+      // 0-1             |                         |                 |                | split
+      // > 1             | < 2                     |                 | x              | x
+      // > 1             | >= 2                    | x               |                | x
+      const layout = fragments.length < 2 ? 'split' :
+        beforeFragmentCount < 2 ? context.rootState.settings.defaultSearchResultLayout :
+        context.state.layout
+      context.commit('layout', layout)
+      const searchReplacement = words && !text.startsWith('/') ? '$1<span class="bold">$2</span>$3' : '<span class="bold">$1</span>'
+      context.commit('searchTermHighlightReplacement', searchReplacement)
+      context.commit('searchTermHighlightRegex', jota.highlightRegex(progress.regex))
+      context.commit('fragments', fragments)
+      console.log(`Search took ${Date.now() - t0} ms`)
+    } catch (ex) {
+      context.commit('fragments', [])
+      context.commit('error', ex.message)
+    } finally {
+      context.commit('progress', 0)
+    }
   },
 
   moveFragmentIndex(context, delta) {
