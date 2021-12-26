@@ -3,16 +3,15 @@
 # Features
 
 ## General
-1. Search references with mixed punctuation ':', ','
-2. Defining the scope of the search, in which books, old/new testament.
-3. i18n
-4. Option to include words highlighting in the verses using markdown or HTML format.
-5. Highlighting the lookup in the search primary color with continuous layout?
-6. Edit the list of search results by adding and removing verses from it
-7. Mouse free operating, configurable keyboard shortcuts
+1. Defining the scope of the search, in which books, old/new testament.
+2. i18n.
+3. Option to include words highlighting in the verses using markdown or HTML format.
+4. Click on passage ref in continuous layout to show it split layout.
+5. Edit the list of search results by adding and removing verses from it.
+6. Mouse free operating, configurable keyboard shortcuts.
 
 ## Server side services
-1. Comparison of a passage in different translations. Service more suitable than fetching multiple translations at one to the client and than comparing them.
+1. Comparison of a passage in different translations. Service more suitable than fetching multiple translations at once to the client and than comparing them.
 1. Deal with slow connection, don't fetch entire Bible if connection is slow, option to cancel translation change and go back to previous translation. Would require creating a server side service to do the processing and get the results only to limit the network throughput.
 1. Search by all grammatical forms of the given form - make a web service with a grammar dictionary (if there is no such dictionary) and replace the returned list of forms with a regular expression of the type /forma1|forma2|.../gi and search
 1. Search by synonyms, very powerful cutting edge feature enabling comprehensive insight into Bible
@@ -54,3 +53,5 @@
 4. Option to store bible translations locally for desktop and mobile apps.
 5. REST API - JSON service returning the fragment text after providing the request with the passage reference.
 6. Wordpress plugin - a biblical link with a tooltip showing the content of the fragment.
+
+

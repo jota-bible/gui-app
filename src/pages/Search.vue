@@ -38,9 +38,6 @@
           >
             <q-tooltip>{{ wordsTooltip }}</q-tooltip>
           </q-btn>
-
-          <!-- Change separator cahracter -->
-          <Separator style="float: right; margin-right: 0" v-model="separator" />
         </template>
       </q-input>
 
@@ -218,7 +215,6 @@
 <script>
 import { colors } from 'quasar'
 import Header from 'src/components/Header'
-import Separator from 'src/components/Separator'
 import { mapAll } from 'src/store'
 import jota from 'src/logic/jota'
 import { copyTextToClipboard } from 'src/logic/util'
@@ -226,7 +222,7 @@ import { audioSource } from 'src/logic/audio'
 
 const definition = mapAll('search', {
   name: 'Search',
-  components: { Header, Separator },
+  components: { Header },
   data: () => {
     return {
       audioOn: false,

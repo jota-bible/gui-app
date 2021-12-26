@@ -9,7 +9,16 @@
 
         <div class="row items-center q-mt-sm">
           <span class="label">Domyślny separator:</span>
-          <Separator v-model="separator" />
+          <q-btn
+            outline
+            dense
+            text-color="primary"
+            style="width: 32px; height: 32px; font-weight: 900;"
+            @click="toggleSeparator"
+          >
+            {{ separator }}
+            <q-tooltip>Zmiana znaku oddzielającego rozdział od wersetu</q-tooltip>
+          </q-btn>
         </div>
       </div>
 
@@ -30,7 +39,9 @@
 
     <div class="row items-center">
       <span class="label">Skrótowe nazwy ksiąg:</span>
-      <div class="col"><q-input dense v-model="bookNames" autogrow="" /></div>
+      <div class="col">
+        <q-input dense v-model="bookNames" autogrow />
+      </div>
     </div>
 
     <div class="row items-center">
@@ -56,17 +67,28 @@
       </div>
 
       <div class="col q-pl-md">
-        Znaczniki:<br />
-        ${book} - nazwa księgi <br />
-        ${chapter} - numer rozdziału <br />
-        ${separator} - znak oddzielający numer rozdział od numeru wersetu <br />
-        ${start} - początkowy werset <br />
-        ${end} - końcowy werset <br />
-        ${text} - tekst bez numerów wersetów <br />
-        ${textWithNumbers} - tekst z numerami wersetów <br />
-        ${textWithNewLines} - tekst z numerami wersetów i każdy od nowej linii <br />
-        ${translation} - symbol przekładu <br />
-        ${translationUpperCase} - symbol przekładu dużymi literami <br />
+        Znaczniki:
+        <br />
+        ${book} - nazwa księgi
+        <br />
+        ${chapter} - numer rozdziału
+        <br />
+        ${separator} - znak oddzielający numer rozdział od numeru wersetu
+        <br />
+        ${start} - początkowy werset
+        <br />
+        ${end} - końcowy werset
+        <br />
+        ${text} - tekst bez numerów wersetów
+        <br />
+        ${textWithNumbers} - tekst z numerami wersetów
+        <br />
+        ${textWithNewLines} - tekst z numerami wersetów i każdy od nowej linii
+        <br />
+        ${translation} - symbol przekładu
+        <br />
+        ${translationUpperCase} - symbol przekładu dużymi literami
+        <br />
       </div>
     </div>
 
@@ -79,14 +101,10 @@
 
 <script>
 import Bibles from 'src/components/Bibles'
-import Separator from 'src/components/Separator'
 import { mapAll } from 'src/store'
 
 export default mapAll('settings', {
-  components: {
-    Bibles,
-    Separator,
-  },
+  components: { Bibles },
   data() {
     return {
       layouts: [
@@ -94,6 +112,12 @@ export default mapAll('settings', {
         { label: 'Nawigacja', value: 'split' },
       ],
     }
+  },
+  methods: {
+    toggleSeparator() {
+      const newValue = this.separator === ':' ? ',' : ':'
+      this.separator = newValue
+    },
   },
 })
 </script>

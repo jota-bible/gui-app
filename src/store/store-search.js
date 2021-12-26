@@ -104,12 +104,12 @@ const actions = {
         // context.commit('progress', value / bible.length)
       },
     }
-    const { separator, words, shouldSort } = context.state
+    const { words, shouldSort } = context.state
     context.commit('progress', 0.1)
     context.commit('error', '')
     try {
       const fragments = Object.freeze(
-        await jota.search(bible, text, separator, words, translation, shouldSort, progress))
+        await jota.search(bible, text, words, translation, shouldSort, progress))
 
       // Layout decision matrix
       // Fragments count | Previous fragment count | Current Layout | Default layout | Result layout
@@ -127,7 +127,8 @@ const actions = {
       console.log(`Search took ${Date.now() - t0} ms`)
     } catch (ex) {
       context.commit('fragments', [])
-      context.commit('error', ex.message)
+      context.commit('error', 'Błąd: ' + ex.message)
+      console.error(ex.message)
     } finally {
       context.commit('progress', 0)
     }

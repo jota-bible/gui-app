@@ -274,7 +274,7 @@ const jota = {
    * @param {object} progress A an object that would be updated about the progress
    * @returns {[]} Array of fragments (arrays including [bookIndex, chapterIndex, startVerse, endVerse])
    */
-  search(bible, text, separator, words, translation, shouldSort, progress) {
+  search(bible, text, words, translation, shouldSort, progress) {
     // If text is a regular expression
     if (text.startsWith('/')) {
       const end = text.lastIndexOf('/')
@@ -295,7 +295,7 @@ const jota = {
 
     // Otherwise try to find passage references
     const fragments = jota.fragments(bible,
-      jota.searchReferences(text, separator, bible.length > 66, translation), shouldSort)
+      jota.searchReferences(text, bible.length > 66, translation), shouldSort)
     if (fragments.length) return fragments
 
     // If no fragments found in the given text then search in the bible content for full
@@ -319,16 +319,16 @@ const jota = {
    * @param {string} lang Language locale for the bible translation
    * @returns {string} List passages encoded using osis standard.
    */
-  searchReferences(text, separator, apocrypha, translation, lang) {
+  searchReferences(text, apocrypha, translation, lang) {
     require(`../statics/bcv-parsers/${lang || 'pl'}_bcv_parser`)
     const parser = new bcv_parser()
     parser.include_apocrypha(!!apocrypha)
     parser.set_options({
-      punctuation_strategy: separator === ',' ? 'eu' : 'us',
+      punctuation_strategy: 'eu',
       versification_system: translation,
       consecutive_combination_strategy: 'separate',
     })
-    parser.parse(text)
+    parser.parse(text.replace(/:\s*/gm, ','))
     return parser.osis()
   },
 
