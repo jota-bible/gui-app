@@ -163,7 +163,7 @@
       </audio>
 
       <div v-show="loading">
-        <q-circular-progress indeterminate size="30px" color="pink-7" class="q-my-md q-mr-md" />
+        <q-circular-progress indeterminate size="30px" color="accent" class="q-my-md q-mr-md" />
         <span>Pobieranie treści przekładu ...</span>
       </div>
 
@@ -343,9 +343,7 @@ const definition = mapAll('search', {
     }
 
     if (this.input) {
-      console.log('on mounted')
-      this.$store.commit('search/separator', ':')
-      this.find(this.input).then(() => this.$store.commit('search/layout', 'split'))
+      this.find(this.input, this.$route.query || {}).then(() => this.$store.commit('search/layout', 'split'))
     }
 
     this.updateSizes()
@@ -392,8 +390,9 @@ const definition = mapAll('search', {
       }
     },
 
-    find(input) {
-      return this.findByInput(input)
+    find(input, opt) {
+      const options = opt || {}
+      return this.findByInput({ input, options })
     },
 
     focusChapterVerse(i) {

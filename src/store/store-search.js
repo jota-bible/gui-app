@@ -84,7 +84,7 @@ const actions = {
     }
   },
 
-  async findByInput(context, input) {
+  async findByInput(context, { input, options }) {
     await jota.bibleLoadingPromise
     const t0 = Date.now()
     const bible = context.rootState.bibles.content
@@ -105,11 +105,12 @@ const actions = {
       },
     }
     const { words, shouldSort } = context.state
+    Object.assign(options, { words, shouldSort, translation })
     context.commit('progress', 0.1)
     context.commit('error', '')
     try {
       const fragments = Object.freeze(
-        await jota.search(bible, text, words, translation, shouldSort, progress))
+        await jota.search(bible, text, options, progress))
 
       // Layout decision matrix
       // Fragments count | Previous fragment count | Current Layout | Default layout | Result layout

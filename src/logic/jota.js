@@ -267,14 +267,14 @@ const jota = {
    *
    * @param {[]} bible Three dimensional array with the content of the bible translation
    * @param {string} text Search input
-   * @param {string} separator Separator between chapter and verses
-   * @param {boolean} words Should search for whole words or just characters chains
-   * @param {string} translation Name of the translation
-   * @param {boolean} shouldSort should the results be sorted by the indexes of book, chapter and verse
+   * @param {object} opotions Search options such as
+   *   words - Should search for whole words or just characters chains
+   *   translation - Name of the translation used for the versification system
+   *   shouldSort - should the results be sorted by the indexes of book, chapter and verse
    * @param {object} progress A an object that would be updated about the progress
    * @returns {[]} Array of fragments (arrays including [bookIndex, chapterIndex, startVerse, endVerse])
    */
-  search(bible, text, words, translation, shouldSort, progress) {
+  search(bible, text, options, progress) {
     // If text is a regular expression
     if (text.startsWith('/')) {
       const end = text.lastIndexOf('/')
@@ -293,14 +293,19 @@ const jota = {
       return jota.searchContent(regex, bible, progress)
     }
 
+    options.apocrypha = options.apocrypha === undefined ? bible.length > 66 : options.apocrypha
+
     // Otherwise try to find passage references
-    const fragments = jota.fragments(bible,
-      jota.searchReferences(text, bible.length > 66, translation), shouldSort)
+    // require(`../statics/bcv-parsers/${lang || 'pl'}_bcv_parser`)
+    require('../statics/bcv-parsers/full_bcv_parser')
+    const parser = new bcv_parser()
+    const refs = jota.searchReferences(text, parser, options)
+    const fragments = jota.fragments(bible, refs, options.shouldSort)
     if (fragments.length) return fragments
 
     // If no fragments found in the given text then search in the bible content for full
     let regex
-    if (words) {
+    if (options.words) {
       const notWord = '[^a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]'
       regex = new RegExp(`(^|${notWord})(${text})($|${notWord})`, 'i')
     } else {
@@ -310,25 +315,26 @@ const jota = {
   },
 
   /**
-   * Parse the given text to identified the passages references.
+   * Parse the given text input to identify reference of bible passages.
+   * It is basically a wrapper for a bcv parser that includes a pl and en languages.
+   * It normalizes the 'us' and 'eu' chapter-verse separator to be able to work with mixed notations of references in the input text
    *
-   * @param {string} text Search input
-   * @param {string} separator Separator between chapter and verses
-   * @param {boolean} apocrypha Should it search in apocrypha books
-   * @param {string} translation Name of the translation
-   * @param {string} lang Language locale for the bible translation
-   * @returns {string} List passages encoded using osis standard.
+   * @param {string} input Search input
+   * @param {string} parses BCV Parser instance to use
+   * @param {object} object Options specifying
+   *   apocrypha - should it search in apocrypha books,
+   *   translation - name of the translation to use for the versification system,
+   *   merge - should it combine consecutive passage references
+   * @returns {string} List of passages encoded using osis standard
    */
-  searchReferences(text, apocrypha, translation, lang) {
-    require(`../statics/bcv-parsers/${lang || 'pl'}_bcv_parser`)
-    const parser = new bcv_parser()
-    parser.include_apocrypha(!!apocrypha)
+  searchReferences(input, parser, options) {
+    parser.include_apocrypha(!!options.apocrypha)
     parser.set_options({
       punctuation_strategy: 'eu',
-      versification_system: translation,
-      consecutive_combination_strategy: 'separate',
+      versification_system: options.translation,
+      consecutive_combination_strategy: JSON.parse(options.merge || false) ? 'combine' : 'separate',
     })
-    parser.parse(text.replace(/:\s*/gm, ','))
+    parser.parse(input.replace(/:\s*/gm, ','))
     return parser.osis()
   },
 
