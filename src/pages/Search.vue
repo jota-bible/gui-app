@@ -200,12 +200,10 @@
         </div>
 
         <div id="formatted" class="row q-pb-md" v-if="layout === 'formatted'">
-          <div
-            v-for="(s, i) in fragments"
-            v-bind:key="i"
-            class="formatted-verse"
-            v-html="lineInFormattedSearchResults(i)"
-          />
+          <div v-for="(item, i) in formattedSearchResults()" v-bind:key="i" class="formatted-verse">
+            <span class="bref" @click="readInContext(i)">{{ item.bref }} {{ item.symbol }}</span>
+            <span v-html="item.content" />
+          </div>
         </div>
       </div>
     </q-page>
@@ -276,7 +274,9 @@ const definition = mapAll('search', {
     },
     layout(value) {
       if (value === 'split') {
-        this.$nextTick().then(() => this.highlightPassage(0))
+        if (this.fragmentIndex < 0 || this.fragmentIndex >= this.fragments.length) {
+          this.$nextTick().then(() => this.highlightPassage(0))
+        }
         document.body.style.overflowY = 'hidden'
       } else {
         document.body.style.overflowY = 'auto'
@@ -403,13 +403,15 @@ const definition = mapAll('search', {
       }
     },
 
-    lineInFormattedSearchResults(i) {
-      const bref = jota.formatReference(this.fragments[i], this.$store.getters['settings/books'], this.separator)
-      const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
-      const content = this.highlightSearchTerm(
-        jota.verses(this.$store.state.bibles.content, this.fragments[i]).join('\n')
-      )
-      return `<span class="bref">${bref} ${symbol}</span> "${content}"`
+    formattedSearchResults() {
+      return this.fragments.map(fragment => {
+        const bref = jota.formatReference(fragment, this.$store.getters['settings/books'], this.separator)
+        const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
+        const content = this.highlightSearchTerm(
+          jota.verses(this.$store.state.bibles.content, fragment).join('\n')
+        )
+        return { bref, symbol, content }
+      })
     },
 
     highlightPassage(i, previousIndex) {
@@ -437,6 +439,10 @@ const definition = mapAll('search', {
         this.audioPlayer.pause()
       }
     },
+
+    // readInContext(i) {
+
+    // },
 
     removeListeners() {
       this.globalListeners.forEach(([eventType, listener]) => {
@@ -519,6 +525,7 @@ export default definition
 </script>
 
 <style lang="sass">
+
 .q-page-container
   width: 100%
 .search-container
@@ -540,6 +547,10 @@ main#search
     padding-top: 4px
     padding-bottom: 4px
     width: 100%
+
+    span:nth-child(1)
+      margin-right: 8px
+      cursor: pointer
 
   .passage-margin
     height: 4px

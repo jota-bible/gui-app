@@ -64,6 +64,12 @@ const mutations = defaultMutations(state, {
   fragmentIndex(state, payload) {
     state.fragmentIndex = payload
     mutations.chapterFragment(state, state.fragments[state.fragmentIndex])
+  },
+  readInContext(state, payload) {
+    state.fragmentIndex = payload
+    state.chapterFragment = state.fragments[state.fragmentIndex]
+    state.layout = 'split'
+    console.log('readInContext', payload, state, state.fragmentIndex, state.fragments[state.fragmentIndex])
   }
 })
 
