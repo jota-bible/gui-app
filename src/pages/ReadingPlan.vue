@@ -2,7 +2,11 @@
   <q-page class="q-px-lg">
     <div class="col">
       <div class="row q-mb-sm">
-        <q-expansion-item :label="'Wybór planu: ' + selectedName" v-model="expanded" :class="{ 'col-grow': expanded }">
+        <q-expansion-item
+          :label="'Wybór planu: ' + selectedName"
+          v-model="expanded"
+          :class="{ 'col-grow': expanded }"
+        >
           <!-- Table of reading plans -->
           <q-table
             id="plans"
@@ -29,7 +33,13 @@
           <!-- Start date of the plan -->
           <div id="planStartDate" class="row q-mr-md">
             <div class="label q-mr-sm">Data rozpoczęcia:</div>
-            <q-input v-model="planStartDate" type="date" placeholder="Wprowadź datę" dense color="primary"></q-input>
+            <q-input
+              v-model="planStartDate"
+              type="date"
+              placeholder="Wprowadź datę"
+              dense
+              color="primary"
+            ></q-input>
           </div>
 
           <!-- Progress -->
@@ -39,7 +49,11 @@
             <div class="align-center col-grow">
               <q-linear-progress size="24px" :value="progress" color="accent">
                 <div class="absolute-full flex flex-center">
-                  <q-badge color="white" text-color="accent" :label="Math.ceil(progress * 100) + '%'" />
+                  <q-badge
+                    color="white"
+                    text-color="accent"
+                    :label="Math.ceil(progress * 100) + '%'"
+                  />
                 </div>
               </q-linear-progress>
             </div>
@@ -61,16 +75,23 @@
         style="max-height: calc(100vh - 100px)"
       >
         <template v-slot="{ item, index }">
-          <q-item :key="index" :class="itemClass(index)" dense class="compact" tabIndex="0">
-            <q-item-section class="col-shrink"
-              ><q-checkbox :value="checked(index)" @input="check(index)" color="grey"></q-checkbox
-            ></q-item-section>
+          <q-item :key="index" :class="itemClass(index)" dense class="compact" tabindex="0">
+            <q-item-section class="col-shrink">
+              <q-checkbox :value="checked(index)" @input="check(index)" color="grey"></q-checkbox>
+            </q-item-section>
             <q-item-section class="index">{{ index + 1 }}</q-item-section>
             <q-item-section class="col-shrink">{{ date(index) }}</q-item-section>
             <q-item-section>
-              <q-btn type="a" dense flat no-caps color="primary" align="left" class="reading" @click="read(index)">
-                {{ item }}
-              </q-btn>
+              <q-btn
+                type="a"
+                dense
+                flat
+                no-caps
+                color="primary"
+                align="left"
+                class="reading"
+                @click="read(index)"
+              >{{ item }}</q-btn>
             </q-item-section>
           </q-item>
         </template>
@@ -178,8 +199,10 @@ export default mapAll('settings', {
       this.virtualListIndex = index
     },
     print() {
-      const route = this.$router.resolve('/reading-plan-print')
-      window.open(route.href, '_blank')
+      const route = this.$router.resolve('reading-plan-print')
+      console.log('route.href', route.href)
+      this.$router.push({ path: 'reading-plan-print' })
+      // window.open(route.href, '_blank')
     },
     read(index) {
       const passages = this.readings[index]
@@ -187,10 +210,12 @@ export default mapAll('settings', {
         .map(p => (p.match(/\d$/) ? p : p + ' 1'))
         .join(', ')
       this.$store.commit('search/input', passages)
-      this.$router.push({ path: '/' })
+      this.$router.go({ path: '/' })
     },
     scroll(index) {
-      this.$refs.virtualListRef.scrollTo(Math.max(0, index === undefined ? this.planProgress - 1 : index))
+      const i = Math.max(0, index === undefined ? this.planProgress - 1 : index)
+      console.log(i)
+      this.$refs.virtualListRef.scrollTo(i, 'start-force')
     },
   },
 })

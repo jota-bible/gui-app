@@ -1,14 +1,20 @@
 <template>
   <div class="justify-start items-start content-start q-mt-sm">
-    Plan: {{ selectedName }}, &nbsp;&nbsp;data rozpoczęcia: {{ formatDate(planStartDate) }}
-
+    <div>
+      Plan:
+      <b>{{ selectedName }}</b>
+      &nbsp;&nbsp; dni:
+      <b>{{ selected.steps }}</b> &nbsp;&nbsp;data rozpoczęcia:
+      <b>{{ formatDate(planStartDate) }}</b>
+    </div>
+    <!-- <div>Opis: {{ selected.description }}</div> -->
     <div class="row page" v-for="from in pages" :key="from">
       <!-- Readings -->
       <div class="column">
         <div v-for="(step, index) in items(from)" :key="index" class="row no-wrap reading">
           <div>{{ from + index }}.</div>
           <div>{{ date(from + index) }}</div>
-          <div class="cell">{{ step }}</div>
+          <div :class="itemClass(step)">{{ step.replace(/\(No reading\)/g, '(Bez czytania)') }}</div>
         </div>
       </div>
     </div>
@@ -41,11 +47,16 @@ export default mapAll('settings', {
     }
   },
   mounted() {
+    this.oldMode = this.darkMode
+    this.$store.commit('settings/darkMode', false)
     this.nextPage()
+  },
+  destroyed() {
+    this.$store.commit('settings/darkMode', this.oldMode)
   },
   computed: {
     readings() {
-      let text = this.selected[0].readings || ''
+      let text = this.selected.readings || ''
       books.fullEnglish.forEach((b, i) => {
         text = text.replaceAll(new RegExp(b, 'mg'), books.fullPolish[i])
       })
@@ -53,7 +64,7 @@ export default mapAll('settings', {
     },
     selected: {
       get() {
-        return this.plan ? [this.data.find(p => p.name === this.plan)] : []
+        return this.data.find(p => p.name === this.plan)
       },
       set(v) {
         this.plan = v ? v[0].name : ''
@@ -61,7 +72,7 @@ export default mapAll('settings', {
     },
     selectedName() {
       return this.plan
-    },
+    }
   },
 
   methods: {
@@ -83,6 +94,9 @@ export default mapAll('settings', {
       } else {
         return date
       }
+    },
+    itemClass(step) {
+      return step.includes('(No reading)') ? 'completed' : 'black'
     },
     nextPage() {
       const parent = document.querySelectorAll('.page')[this.pageIndex]
@@ -120,13 +134,18 @@ function parseDate(s) {
 </script>
 
 <style lang="sass">
-.page:nth-child(1)
-  height: 26.5cm
+
+@media print
+  *
+    color: 'black' !important
+
+.page:nth-child(2)
+  height: 24cm
   .column
-    max-height: 26.5cm
+    max-height: 24cm
 
 .page
-  height: 27cm
+  height: 25.5cm
   max-width: 19cm
   margin-top: 8px
   margin-bottom: 8px
@@ -134,7 +153,7 @@ function parseDate(s) {
   page-break-after: always
 
   .column
-    max-height: 27cm
+    max-height: 25.5cm
 
     .row
       width: 9.5cm
@@ -147,4 +166,8 @@ function parseDate(s) {
         color: grey
       div:nth-child(3)
         width: 100%
+
+.completed, .completed button, .completed a
+  color: grey !important
+  font-weight: normal
 </style>
