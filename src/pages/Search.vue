@@ -407,8 +407,8 @@ const definition = mapAll('search', {
       return this.fragments.map(fragment => {
         const bref = jota.formatReference(fragment, this.$store.getters['settings/books'], this.separator)
         const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
-        const content = this.highlightSearchTerm(
-          jota.verses(this.$store.state.bibles.content, fragment).join('\n')
+        const content = ' "' + this.highlightSearchTerm(
+          jota.verses(this.$store.state.bibles.content, fragment).join('\n') + '"'
         )
         return { bref, symbol, content }
       })
