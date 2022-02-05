@@ -210,7 +210,7 @@ export default mapAll('settings', {
         .map(p => (p.match(/\d$/) ? p : p + ' 1'))
         .join(', ').trim()
       this.$store.commit('search/input', passages)
-      this.$router.push({ path: '/' })
+      this.$router.go({ path: '/' })
     },
     scroll(index) {
       const i = Math.max(0, index === undefined ? this.planProgress - 1 : index)
