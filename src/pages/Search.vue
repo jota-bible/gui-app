@@ -365,19 +365,20 @@ const definition = mapAll('search', {
       // })
 
       const prevLayout = this.$store.state.search.layout
-      if (e.metaKey || e.ctrolKey) {
+      if (e.metaKey || e.ctrlKey) {
         this.$store.commit('search/layout', 'split')
         this.$nextTick(() => {
           copyTextToClipboard(
-            Array.from(document.querySelectorAll('#passages > div')).map(e => e.innerText).join(';'))
+            Array.from(document.querySelectorAll('#passages > div')).map(e => e.innerText).join('; '))
           this.$store.commit('search/layout', prevLayout)
           this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
         })
       } else {
-        this.$store.commit('search/layout', 'formatted')
         this.$nextTick(() => {
-          copyTextToClipboard(document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n'))
-          this.$store.commit('search/layout', prevLayout)
+          // const text = document.getElementById('formatted').innerText.replace(/\n/gm, '\n\n')
+          const text = this.fragments.map(fragment =>
+            this.$store.getters['settings/formatted'](fragment, this.separator)).join('\n\n')
+          copyTextToClipboard(text)
           this.$q.notify({ message: 'Skopiowano znalezione fragmenty do schowka', group: false })
         })
       }
