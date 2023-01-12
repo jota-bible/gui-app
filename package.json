@@ -21,14 +21,15 @@
     "custom-icons:watch": "watch 'npm run custom-icons' src/custom-icons/svg"
   },
   "dependencies": {
-    "quasar": "^1.15.4",
-    "@quasar/extras": "^1.0.0"
+    "@quasar/extras": "^1.0.0",
+    "node-sass": "^4.14.1",
+    "quasar": "^1.15.4"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.9.6",
     "@quasar/app": "^1.8.10",
     "@quasar/quasar-app-extension-testing": "^1.0.0",
     "@quasar/quasar-app-extension-testing-unit-jest": "^1.0.0",
-    "@babel/preset-env": "^7.9.6",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
