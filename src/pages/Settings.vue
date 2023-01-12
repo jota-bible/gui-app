@@ -64,7 +64,42 @@
           <q-input dense class="threshold" type="number" v-model.number="threshold3" />
           <q-input dense class="format" v-model="format3" @focus="example = 3" />
         </div>
+
+        <br/>
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Formatowanie wersetów podczas kopiowania</div>
+          </q-card-section>
+          <q-separator inset />
+          <q-card-section>
+            <div class="row items-center">
+              <div>Odnośnik</div><div class="q-gutter-sm">
+                <q-radio v-model="referencePosition" val="before" label="Przed" />
+                <q-radio v-model="referencePosition" val="after" label="Po" />
+              </div>
+              <q-checkbox v-model="referenceNewLine" label="Odnośnik w oddzielnej linii"></q-checkbox>
+            </div>
+            <div class="row items-center">Separator:
+              <div class="q-gutter-sm">
+                <q-radio v-model="referencePosition" val=":" label=":" />
+                <q-radio v-model="referencePosition" val="," label="," />
+              </div>
+            </div>
+            <div class="row items-center">
+              <q-checkbox v-model="referenceNewLine" label="Skrót przekładu"></q-checkbox>
+              <q-checkbox v-model="referenceNewLine" label="Dużymi literami"></q-checkbox>
+            </div>
+            <div class="row items-center">
+              <q-checkbox v-model="referenceNewLine" label="Wersety w cudzysłowiu"></q-checkbox>
+              <q-checkbox v-model="referenceNewLine" label="Wersety z numerami"></q-checkbox>
+              <q-checkbox v-model="referenceNewLine" label="Wersety od nowej linii"></q-checkbox>
+            </div>
+          </q-card-section>
+        </q-card>
+        <br/>
+
       </div>
+
 
       <div class="col q-pl-md">
         Znaczniki:
