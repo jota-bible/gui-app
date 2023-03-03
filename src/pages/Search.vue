@@ -15,9 +15,9 @@
           <q-icon
             v-if="input !== ''"
             name="icon-mat-close"
-            @click="find('')"
             class="cursor-pointer"
             style="font-size: 0.8em"
+            @click="find('')"
           >
             <q-tooltip>Wyczyść kryteria i wyniki wyszukiwania</q-tooltip>
           </q-icon>
@@ -33,16 +33,25 @@
             dense
             flat
             icon="icon-mdi-arrow-expand-horizontal"
-            @click="words = !words"
             :text-color="words ? 'primary' : 'disabled'"
+            @click="words = !words"
           >
             <q-tooltip>{{ wordsTooltip }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            dense
+            flat
+            icon="icon-mat-checklist"
+            :text-color="showPicker ? 'primary' : 'disabled'"
+            @click="showPicker = !showPicker"
+          >
+            <q-tooltip>{{ pickerTooltip }}</q-tooltip>
           </q-btn>
         </template>
       </q-input>
 
       <!-- Message line -->
-      <div id="message" class="q-my-sm">
+      <div id="message" v-if="!showPicker" class="q-my-sm">
         <q-circular-progress
           ref="progress"
           v-show="progress > 0"
@@ -167,7 +176,9 @@
         <span>Pobieranie treści przekładu ...</span>
       </div>
 
-      <div id="content" class="q-pb-md" v-show="!loading">
+      <ReferencePicker v-if="showPicker"/>
+
+      <div id="content" class="q-pb-md" v-show="!loading && !showPicker">
         <div class="row" v-if="layout === 'split'">
           <!-- List of passages -->
           <div id="passages" v-if="passages.length > 1" class="col bottom-clipped q-list">
@@ -213,6 +224,7 @@
 <script>
 import { colors } from 'quasar'
 import Header from 'src/components/Header'
+import ReferencePicker from 'src/components/ReferencePicker'
 import { mapAll } from 'src/store'
 import jota from 'src/logic/jota'
 import { copyTextToClipboard } from 'src/logic/util'
@@ -220,7 +232,7 @@ import { audioSource } from 'src/logic/audio'
 
 const definition = mapAll('search', {
   name: 'Search',
-  components: { Header },
+  components: { Header, ReferencePicker },
   data: () => {
     return {
       audioOn: false,
@@ -246,10 +258,13 @@ const definition = mapAll('search', {
       return this.$store.state.bibles.loading
     },
     shouldSortTooltip() {
-      return (this.shouldSort ? 'Wy' : 'W') + 'łącz sortowanie i usuwanie duplicatów wśród wyszukanych fragmentów'
+      return (this.shouldSort ? 'Wy' : 'W') + 'łącz sortowanie i usuwanie duplikatów wśród wyszukanych fragmentów'
     },
     wordsTooltip() {
       return (this.words ? 'Wy' : 'W') + 'łącz wyszukiwanie całych słów'
+    },
+    pickerTooltip() {
+      return (this.showPicker ? 'Schowaj' : 'Pokaż') + ' przyciski wyboru księgi, rozdziału i wersetu'
     },
     wordsColor() {
       return this.words ? 'primary' : 'red'
@@ -393,6 +408,7 @@ const definition = mapAll('search', {
 
     find(input, opt) {
       const options = opt || {}
+      this.showPicker = false
       return this.findByInput({ input, options })
     },
 

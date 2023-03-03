@@ -7,7 +7,7 @@ const values = {
 
 const state = {
   chapter: [],
-  chapterFragment: [0, 0],
+  chapterFragment: null,
   error: '',
   fragments: [],
   fragmentIndex: -1,
@@ -20,6 +20,7 @@ const state = {
   separator: ':',
   shouldSort: false,
   words: true,
+  showPicker: true
 }
 
 const getters = {

@@ -6,7 +6,7 @@ const localStorageKey = 'com.github.jota-bible.jota-app/settings'
 const data = JSON.parse(localStorage.getItem(localStorageKey))
 
 export const defaultState = {
-  bookNames: books.bookAbbreviations.join(', '),
+  bookNames: books.bookAbbreviations.pl.join(', '),
   darkMode: true,
   defaultBible: 'Uwspółcześniona Biblia Gdańska (2017)',
   defaultFormat: '',
@@ -65,7 +65,7 @@ const getters = {
 function format(state, rootState, rootGetters, example) {
   const fragment =
     example === 1 ? [0, 0, 0, last(state.threshold1) - 1] :
-    example === 2 ? [0, 0, 0, last(state.threshold2) - 1] : [0, 0, 0, last(state.threshold2) - 1]
+      example === 2 ? [0, 0, 0, last(state.threshold2) - 1] : [0, 0, 0, last(state.threshold2) - 1]
   return jota.format(
     rootState.bibles.content,
     fragment,
