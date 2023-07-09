@@ -23,7 +23,8 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "node-sass": "^4.14.1",
-    "quasar": "^1.15.4"
+    "quasar": "^1.15.4",
+    "jota-parser": "^1.0.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.9.6",

@@ -121,7 +121,8 @@ function applyDarkMode() {
     colors.setBrand('accent', accent)
     colors.setBrand('foreground', foreground)
     colors.setBrand('background', background)
-    colors.setBrand('selection', colors.lighten(primary, -50))
+    // On Safari, without changing alpha the color will be wrong, looking closer to background
+    colors.setBrand('selection', colors.changeAlpha(colors.lighten(primary, -50), 0.99))
     colors.setBrand('border', colors.lighten(background, 20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, 10))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, 20))
@@ -137,7 +138,8 @@ function applyDarkMode() {
     colors.setBrand('accent', accent)
     colors.setBrand('foreground', foreground)
     colors.setBrand('background', background)
-    colors.setBrand('selection', colors.lighten(primary, 85))
+    // On Safari, without changing alpha the color will be wrong, looking closer to background
+    colors.setBrand('selection', colors.changeAlpha(colors.lighten(primary, 85), 0.99))
     colors.setBrand('border', colors.lighten(background, -20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, -15))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, -30))

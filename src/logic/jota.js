@@ -8,10 +8,13 @@
  * bookIndex, chapterIndex, startVerse and endVerse.
  */
 
-/* global bcv_parser */
+// /* global bcv_parser */
 
 import { osis as osisBooks } from './books'
 import { defaultState } from 'src/store/store-settings'
+import { Parser, en, pl } from 'jota-parser'
+
+const parser = new Parser({ locales: [pl, en] })
 
 const jota = {
   bibleLoadingPromise: Promise,
@@ -161,7 +164,7 @@ const jota = {
    * @returns {string} Formatted fragment
    * @returns
    */
-   formatThreshold(thresholdFormats, fragment, bible, bookNames, separator, translation) {
+  formatThreshold(thresholdFormats, fragment, bible, bookNames, separator, translation) {
     const [bi, ci, start, end] = fragment
     const count = isNaN(start) ? bible[bi][ci].length : isNaN(end) ? 1 : end - start + 1
     const [ts1, ts2, ts3] = thresholdFormats
@@ -276,6 +279,7 @@ const jota = {
    */
   search(bible, text, options, progress) {
     // If text is a regular expression
+    text = text.replace(/[\u202d\u202c]/gm, '') // Those characters happened when copying from iPhone to mac, the source was https://bible.com/bible/138/2sa.24.18-24.UBG
     if (text.startsWith('/')) {
       const end = text.lastIndexOf('/')
       // If there is no regex flags add "gi" automatically
@@ -297,10 +301,11 @@ const jota = {
 
     // Otherwise try to find passage references
     // require(`../statics/bcv-parsers/${lang || 'pl'}_bcv_parser`)
-    require('../statics/bcv-parsers/full_bcv_parser')
-    const parser = new bcv_parser()
-    const refs = jota.searchReferences(text, parser, options)
-    const fragments = jota.fragments(bible, refs, options.shouldSort)
+
+    // require('../statics/bcv-parsers/full_bcv_parser')
+    // const parser = new bcv_parser()
+    const fragments = jota.searchReferences(text, options)
+    // const fragments = jota.fragments(bible, refs, options.shouldSort)
     if (fragments.length) return fragments
 
     // If no fragments found in the given text then search in the bible content for full
@@ -327,15 +332,16 @@ const jota = {
    *   merge - should it combine consecutive passage references
    * @returns {string} List of passages encoded using osis standard
    */
-  searchReferences(input, parser, options) {
-    parser.include_apocrypha(!!options.apocrypha)
-    parser.set_options({
-      punctuation_strategy: 'eu',
-      versification_system: options.translation,
-      consecutive_combination_strategy: JSON.parse(options.merge || false) ? 'combine' : 'separate',
-    })
-    parser.parse(input.replace(/:\s*/gm, ','))
-    return parser.osis()
+  searchReferences(input, options) {
+    // parser.include_apocrypha(!!options.apocrypha)
+    // parser.set_options({
+    //   punctuation_strategy: 'eu',
+    //   versification_system: options.translation,
+    //   consecutive_combination_strategy: JSON.parse(options.merge || false) ? 'combine' : 'separate',
+    // })
+    // parser.parse(input.replace(/:\s*/gm, ','))
+    // return parser.osis()
+    return parser.parse(input).map(v => [v[0], v[1] - 1, v[2] ? v[2] - 1 : undefined, v[3] ? v[3] - 1 : undefined])
   },
 
   /**
@@ -382,8 +388,8 @@ const jota = {
     // Sort
     fragments.sort((a, b) =>
       a[0] > b[0] ? 1 : a[0] < b[0] ? -1 :
-      a[1] > b[1] ? 1 : a[1] < b[1] ? -1 :
-      a[2] > b[2] ? 1 : a[2] < b[2] ? -1 : 0
+        a[1] > b[1] ? 1 : a[1] < b[1] ? -1 :
+          a[2] > b[2] ? 1 : a[2] < b[2] ? -1 : 0
     )
 
     if (fragments.length < 2) {
@@ -406,7 +412,7 @@ const jota = {
   verses(bible, fragment) {
     const [bi, ci, si, ei] = fragment
     const content = bible[bi][ci]
-    if (!content) return ''
+    if (!content) return []
 
     const start = isNaN(si) ? 1 : si + 1
     const end = isNaN(ei) ? isNaN(si) ? content.length : si + 1 : ei + 1

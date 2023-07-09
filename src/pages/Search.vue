@@ -421,14 +421,19 @@ const definition = mapAll('search', {
     },
 
     formattedSearchResults() {
-      return this.fragments.map(fragment => {
+      const formatted = []
+      this.fragments.forEach(fragment => {
+        const verses = jota.verses(this.$store.state.bibles.content, fragment)
+        if (!verses.length) {
+          console.warn(`Could not format ${JSON.stringify(fragment)}`)
+          return
+        }
         const bref = jota.formatReference(fragment, this.$store.getters['settings/books'], this.separator)
         const symbol = this.$store.getters['bibles/symbol'].toUpperCase()
-        const content = ' "' + this.highlightSearchTerm(
-          jota.verses(this.$store.state.bibles.content, fragment).join('\n') + '"'
-        )
-        return { bref, symbol, content }
+        const content = '"' + this.highlightSearchTerm(verses.join('\n')) + '"'
+        formatted.push({ bref, symbol, content })
       })
+      return formatted
     },
 
     highlightPassage(i, previousIndex) {
@@ -476,8 +481,9 @@ const definition = mapAll('search', {
         const el = document.getElementById('chapter')
         if (!el) return
         const parentOffset = el.getBoundingClientRect().top
-        const [, , start, end] = this.chapterFragment
+        let [, , start, end] = this.chapterFragment
         if (isNaN(start)) return
+        if (isNaN(end)) end = start
         const top = getBounds(start).top - parentOffset
         const bottom = getBounds(end).bottom - parentOffset
         const fragmentHeight = bottom - top
@@ -489,6 +495,7 @@ const definition = mapAll('search', {
         }
 
         function getBounds(verseIndex) {
+          if (verseIndex === undefined) return
           const verse = el.querySelector(`.q-item:nth-child(${verseIndex + 1})`)
           return verse ? verse.getBoundingClientRect() : { bottom: 0, top: 0 }
         }
@@ -527,7 +534,8 @@ const definition = mapAll('search', {
     },
 
     verseClass(i) {
-      const [, , start, end] = this.chapterFragment
+      const [, , start, end2] = this.chapterFragment
+      const end = end2 === undefined ? start : end2
       return {
         'selection-single': i === start && i === end,
         'selection-start': i === start && i !== end,
@@ -603,9 +611,11 @@ main#search
     max-width: 2em
     justify-content: start
     text-align: center
+    display: inline-block /* Without it Safari would highlight selected div additionally to text */
 
   .verse
     justify-content: start
+    display: inline-block /* Without it Safari would highlight selected div additionally to text */
 
   .selection-single
     box-shadow: inset 1px 1px var(--q-color-primary), inset -1px -1px var(--q-color-primary)
