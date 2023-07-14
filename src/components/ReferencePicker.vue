@@ -46,11 +46,11 @@
       </div>
     </div>
 
-    <div v-if="isChapterSelected" id="reference-picker-verses" class="col" >
+    <!-- <div v-if="isChapterSelected" id="reference-picker-verses" class="col" >
       <div class="row selectors">
         <ReferencePickerButton v-for="verse in verses" :key="verse" :value="verse+1" @select="selectVerse(verse)"/>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -119,15 +119,14 @@ export default {
         'Wybierz werset w:'
     }
   },
-  // watch: {
 
-  // },
   methods: {
     selectBook(i) {
       this.bookIndex = i
     },
     selectChapter(i) {
       this.chapterIndex = i
+      this.finish()
     },
     selectVerse(i) {
       this.verseIndex = i
