@@ -71,10 +71,10 @@ export default mapAll('settings', {
   computed: {
     currentBible: {
       get() {
-        return this.$store.state.bibles.current
+        return this.$store.getters['bibles/title']
       },
       set(title) {
-        this.$store.dispatch('bibles/select', title)
+        this.$store.dispatch('bibles/selectTitle', title)
       },
     },
     isMainRoute() {
