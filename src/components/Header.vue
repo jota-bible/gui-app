@@ -33,7 +33,7 @@
         </q-btn>
 
         <!-- Make a component to handle responsive toolbar -->
-        <q-btn id="more" flat dense icon="more_vert">
+        <q-btn id="more" flat dense icon="icon-mat-more_vert">
           <q-menu auto-close :offset="[110, 0]">
             <q-list id="toolbar-menu">
               <q-item clickable to="/reading-plan">

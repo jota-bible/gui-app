@@ -2,7 +2,8 @@
   Display a combo box with available bible translations.
  */
 <template>
-  <q-select dense outlined v-model="selected" :options="translations" option-label="title" emit-value popup-content-style="white-space: nowrap">
+  <q-select dense outlined v-model="selected" :options="translations" option-label="title" emit-value
+      popup-content-style="white-space: nowrap">
     <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents" >
             <q-item-section avatar>
