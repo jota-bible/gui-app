@@ -28,7 +28,7 @@ export default mapAll('bibles', {
       get() {
         const t = this.translations.find(t => t.title === this.value)
         const symbol = t.symbol.toUpperCase()
-        return this.$q.screen.width < 700 ? symbol : `${symbol}&nbsp;&nbsp;|&nbsp;&nbsp;${t.title}`
+        return this.$q.screen.lt.md ? symbol : `${symbol}&nbsp;&nbsp;|&nbsp;&nbsp;${t.title}`
       },
       set(value) {
         // Inform the parent about the value change

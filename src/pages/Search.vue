@@ -1,54 +1,68 @@
 <template>
   <div class="search-container">
     <q-page id="search" class="col q-px-lg q=pb-md justify-start items-start content-start">
-      <q-input
-        ref="input"
-        v-model="input"
-        placeholder="Podaj tekst zawierający odnośniki biblijne lub frazę do wyszukania w tekście przekładu"
-        dense
-        style="margin-top: 0"
-        autofocus
-        @keyup.enter="find(input)"
-        @keyup.esc="input = ''"
-      >
-        <template v-slot:append>
-          <q-icon
-            v-if="input !== ''"
-            name="icon-mat-close"
-            class="cursor-pointer"
-            style="font-size: 0.8em"
-            @click="find('')"
-          >
-            <q-tooltip>Wyczyść kryteria i wyniki wyszukiwania</q-tooltip>
-          </q-icon>
+      <div class="row full-width">
+        <Bibles v-model="currentBible" class="q-pr-sm col-auto lt-md" />
+        <q-input
+          ref="input"
+          v-model="input"
+          :placeholder="$q.screen.gt.sm ? 'Podaj tekst zawierający odnośniki biblijne lub frazę do wyszukania w tekście przekładu' : 'Odnośnik lub fraza'"
+          dense
+          style="margin-top: 0"
+          autofocus
+          @keyup.enter="find(input)"
+          @keyup.esc="input = ''"
+          full-width
+          class="col"
+        >
+          <template v-slot:append>
+            <q-icon
+              v-if="input !== ''"
+              name="icon-mat-close"
+              class="cursor-pointer"
+              style="font-size: 0.8em"
+              @click="find('')"
+            >
+              <q-tooltip>Wyczyść kryteria i wyniki wyszukiwania</q-tooltip>
+            </q-icon>
 
-          <q-icon name="icon-mat-search" @click="find(input)" class="cursor-pointer">
-            <q-tooltip>Szukaj</q-tooltip>
-          </q-icon>
-        </template>
+            <q-icon name="icon-mat-search" @click="find(input)" class="cursor-pointer">
+              <q-tooltip>Szukaj</q-tooltip>
+            </q-icon>
+          </template>
 
-        <template v-slot:after>
-          <!-- Search whole words or partial -->
-          <q-btn
-            dense
-            flat
-            icon="icon-mdi-arrow-expand-horizontal"
-            :text-color="words ? 'primary' : 'disabled'"
-            @click="words = !words"
-          >
-            <q-tooltip>{{ wordsTooltip }}</q-tooltip>
-          </q-btn>
-          <q-btn
-            dense
-            flat
-            icon="icon-mat-checklist"
-            :text-color="showPicker ? 'primary' : 'disabled'"
-            @click="showPicker = !showPicker"
-          >
-            <q-tooltip>{{ pickerTooltip }}</q-tooltip>
-          </q-btn>
-        </template>
-      </q-input>
+          <template v-slot:after>
+            <ButtonWholeWords :checked="words" @change="v => words = v" class="gt-xs"/>
+            <ButtonBookSelector :checked="showPicker" @change="v => showPicker = v" class="gt-xs"/>
+
+            <ButtonReadingPlan class="sm"/>
+            <ButtonHelp class="sm"/>
+            <ButtonSettings class="sm"/>
+
+            <q-btn dense flat icon="icon-mat-more_vert" class="lt-sm">
+              <q-menu>
+                <q-list style="min-width: 100px">
+                  <q-item >
+                    <ButtonWholeWords :checked="words" @change="v => words = v" in-menu/>
+                  </q-item>
+                  <q-item  >
+                    <ButtonBookSelector :checked="showPicker" @change="v => showPicker = v" in-menu/>
+                  </q-item>
+                  <q-item>
+                    <ButtonReadingPlan in-menu/>
+                  </q-item>
+                  <q-item >
+                    <ButtonHelp in-menu/>
+                  </q-item>
+                  <q-item >
+                    <ButtonSettings in-menu/>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+          </template>
+        </q-input>
+      </div>
 
       <!-- Message line -->
       <div id="message" v-if="!showPicker" class="q-my-sm">
@@ -223,16 +237,22 @@
 
 <script>
 import { colors } from 'quasar'
+import Bibles from 'src/components/Bibles'
 import Header from 'src/components/Header'
+import ButtonBookSelector from 'src/components/ButtonBookSelector'
+import ButtonWholeWords from 'src/components/ButtonWholeWords.vue'
+import ButtonHelp from 'src/components/ButtonHelp'
+import ButtonReadingPlan from 'src/components/ButtonReadingPlan'
+import ButtonSettings from 'src/components/ButtonSettings'
 import ReferencePicker from 'src/components/ReferencePicker'
-import { mapAll } from 'src/store'
 import jota from 'src/logic/jota'
+import { mapAll } from 'src/store'
 import { copyTextToClipboard } from 'src/logic/util'
 import { audioSource } from 'src/logic/audio'
 
 const definition = mapAll('search', {
   name: 'Search',
-  components: { Header, ReferencePicker },
+  components: { Bibles, ButtonBookSelector, ButtonWholeWords, ButtonHelp, ButtonReadingPlan, ButtonSettings, Header, ReferencePicker },
   data: () => {
     return {
       audioOn: false,
@@ -254,18 +274,21 @@ const definition = mapAll('search', {
     audioSource() {
       return audioSource(this.chapterFragment)
     },
+    currentBible: {
+      get() {
+        return this.$store.getters['bibles/title']
+      },
+      set(title) {
+        this.$store.dispatch('bibles/selectTitle', title)
+      },
+    },
     loading() {
       return this.$store.state.bibles.loading
     },
     shouldSortTooltip() {
       return (this.shouldSort ? 'Wy' : 'W') + 'łącz sortowanie i usuwanie duplikatów wśród wyszukanych fragmentów'
     },
-    wordsTooltip() {
-      return (this.words ? 'Wy' : 'W') + 'łącz wyszukiwanie całych słów'
-    },
-    pickerTooltip() {
-      return (this.showPicker ? 'Schowaj' : 'Pokaż') + ' przyciski wyboru księgi, rozdziału i wersetu'
-    },
+
     wordsColor() {
       return this.words ? 'primary' : 'red'
     },

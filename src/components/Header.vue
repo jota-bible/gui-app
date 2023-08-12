@@ -1,36 +1,17 @@
 /** Top header on the screen */
 <template>
   <q-header>
-    <q-toolbar id="toolbar" inverted class="text-primary background q-pl-lg q-pt-sm">
-      <q-toolbar-title> <span id="jota"></span> {{ pageTitle }} </q-toolbar-title>
+    <q-toolbar id="toolbar" v-if="isMainRoute" inverted class="text-primary background q-pl-lg q-pt-sm gt-sm">
+      <q-toolbar-title class="gt-sm"> {{ pageTitle }} </q-toolbar-title>
 
       <!-- Show only on the main page -->
-      <div class="row no-wrap items-center" v-if="isMainRoute">
+      <div class="row no-wrap items-center" >
         <span id="translation-label" class="text-secondary q-mr-sm"> Przekład: </span>
         <Bibles v-model="currentBible" class="q-pr-sm" />
 
-        <!-- Reading plan -->
-        <q-btn id="reading-plan" flat dense icon="icon-mat-playlist_add_check" to="/reading-plan">
-          <q-tooltip> Plan czytania </q-tooltip>
-        </q-btn>
-
-        <!-- Help -->
-        <q-btn
-          id="help"
-          flat
-          dense
-          icon="icon-mat-help"
-          type="a"
-          href="https://docs.google.com/document/d/1unCVgpMRlzlaRRXdxdDkmNyVxqG7honM49lSKS9TTnU"
-          target="_blank"
-        >
-          <q-tooltip> Informacje o programie </q-tooltip>
-        </q-btn>
-
-        <!-- Settings -->
-        <q-btn id="settings" flat dense icon="icon-mat-settings" to="/settings">
-          <q-tooltip> Ustawienia </q-tooltip>
-        </q-btn>
+        <ButtonReadingPlan />
+        <ButtonHelp />
+        <ButtonSettings />
 
         <!-- Make a component to handle responsive toolbar -->
         <q-btn id="more" flat dense icon="icon-mat-more_vert">
@@ -49,25 +30,29 @@
           </q-menu>
         </q-btn>
       </div>
+    </q-toolbar>
+    <div class="lt-md" style="height: 8px"/>
 
+    <q-toolbar v-if="!isMainRoute">
       <!-- Come back button -->
-      <span v-else>
-        <q-btn flat to="/" class="print-hide"
-          >Powrót
-          <q-tooltip> Powrót do strony głównej </q-tooltip>
-        </q-btn>
-      </span>
+      <q-btn flat icon="icon-mat-arrow_back_ios" to="/" class="print-hide">
+        <q-tooltip> Powrót do strony głównej </q-tooltip>
+      </q-btn>
+      <q-toolbar-title class="text-primary"> {{ pageTitle }} </q-toolbar-title>
     </q-toolbar>
   </q-header>
 </template>
 
 <script>
 import Bibles from 'src/components/Bibles'
+import ButtonHelp from 'src/components/ButtonHelp'
+import ButtonReadingPlan from 'src/components/ButtonReadingPlan'
+import ButtonSettings from 'src/components/ButtonSettings'
 import { mapAll } from 'src/store'
 
 export default mapAll('settings', {
   name: 'MainLayout',
-  components: { Bibles },
+  components: { Bibles, ButtonHelp, ButtonReadingPlan, ButtonSettings },
   computed: {
     currentBible: {
       get() {
@@ -102,9 +87,6 @@ export default mapAll('settings', {
   min-width: 150px
   padding-left: 16px
 
-#help
-  margin-right: 2px
-
 #more
   display: none
 
@@ -118,25 +100,4 @@ export default mapAll('settings', {
 .q-layout__section--marginal
   background: transparent
 
-// Make the toolbar responsive, the idea is to have as many buttons visible as possible
-// then menu show only when not all the buttons are bisible
-// Also element with lower priority like titles and lables to be hidden first
-@media (max-width: 510px)
-  .q-toolbar__title
-    display: none
-@media (max-width: 444px)
-  #translation-label
-    display: none
-@media (max-width: 382px)
-  #help, #settings
-    display: none
-  .q-toolbar__title
-    flex: 0
-    padding: 0
-@media (max-width: 356px)
-  #reading-plan
-    display: none
-@media (max-width: 382px)
-  #more
-    display: inline-flex
 </style>

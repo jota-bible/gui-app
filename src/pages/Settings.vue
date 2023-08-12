@@ -64,7 +64,48 @@
           <q-input dense class="threshold" type="number" v-model.number="threshold3" />
           <q-input dense class="format" v-model="format3" @focus="example = 3" />
         </div>
+
+        <!-- <br/>
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Format treści fragmentu wraz z odnośnikiem</div>
+          </q-card-section>
+          <q-separator inset />
+          <q-card-section>
+            <div class="row items-center">
+              <div>Miejsce występowania odnośnika w stosunku do treści fragmentu</div>
+              <div class="q-gutter-sm">
+                <q-radio v-model="referencePosition" val="before" label="Przed treścią" />
+                <q-radio v-model="referencePosition" val="after" label="Po treści" />
+              </div>
+            </div>
+            <div class="row items-center">
+              <q-checkbox v-model="referenceNewLine" label="Odnośnik w oddzielnej linii"></q-checkbox>
+            </div>
+            <div class="row items-center">Znak oddzielający rozdział od wersetów w odnośniku:
+              <div class="q-gutter-sm">
+                <q-radio v-model="referencePosition" val=":" label="Dwukropek" />
+                <q-radio v-model="referencePosition" val="," label="Przecinek" />
+              </div>
+            </div>
+            <div class="row items-center">
+              <q-checkbox v-model="referenceNewLine" label="Treść fragmentu w cudzysłowie"></q-checkbox>
+              <q-checkbox v-model="referenceNewLine" label="Wersety z numerami"></q-checkbox>
+              <q-checkbox v-model="referenceNewLine" label="Każdy wersety od nowej linii"></q-checkbox>
+            </div>
+            <div class="row items-center">
+              <div class="q-gutter-sm">
+                  <q-radio v-model="translationAbbreviation" label="Bez skrótu przekładu"></q-radio>
+                  <q-radio v-model="translationAbbreviation" label="Skrót przekładu małymi literami"></q-radio>
+                  <q-radio v-model="translationAbbreviation" label="Skrót przekładu dużymi literami"></q-radio>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+        <br/> -->
+
       </div>
+
 
       <div class="col q-pl-md">
         Znaczniki:
