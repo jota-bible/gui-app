@@ -41,8 +41,8 @@
 
             <q-btn dense flat icon="icon-mat-more_vert" class="lt-sm">
               <q-menu>
-                <q-list style="min-width: 100px">
-                  <q-item >
+                <q-list style="min-width: 210px">
+                  <q-item>
                     <ButtonWholeWords :checked="words" @change="v => words = v" in-menu/>
                   </q-item>
                   <q-item  >

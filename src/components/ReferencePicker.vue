@@ -32,17 +32,22 @@
     <div v-if="bookIndex === -1" id="reference-picker-books" class="col q-mt-sm">
       <!-- <div class="row q-mb-sm text-h6">Stary testament</div> -->
       <div class="row selectors">
-        <ReferencePickerButton v-for="(book, i) in oldTestament" :key="i" :value="book" @select="selectBook(i)"/>
+        <ReferencePickerButton v-for="(book, i) in books.slice(0, 17)" :key="i" :value="book" :alternate="alternate[i]" @select="selectBook(i)"/>
       </div>
+
+      <div class="row selectors q-mt-sm">
+        <ReferencePickerButton v-for="(book, i) in books.slice(17, 39)" :key="i" :value="book" :alternate="alternate[i+17]" @select="selectBook(i+17)"/>
+      </div>
+
       <!-- <div class="row q-mt-sm text-h6">Nowy testament</div> -->
       <div class="row selectors q-mt-md">
-        <ReferencePickerButton v-for="(book, i) in newTestament" :key="i" :value="book" @select="selectBook(39+i)"/>
+        <ReferencePickerButton v-for="(book, i) in books.slice(39, 66)" :key="i" :value="book" :alternate="alternate[i+39]" @select="selectBook(i+39)"/>
       </div>
     </div>
 
     <div v-if="!isChapterSelected && isBookSelected" id="reference-picker-chapters" class="col" >
       <div class="row selectors">
-        <ReferencePickerButton v-for="chapter in chapters" :key="chapter" :value="chapter+1" @select="selectChapter(chapter)"/>
+        <ReferencePickerButton v-for="chapter in chapters" :key="chapter" :value="chapter+1" alternate="0" @select="selectChapter(chapter)"/>
       </div>
     </div>
 
@@ -58,10 +63,24 @@
 import books from 'src/logic/books'
 import ReferencePickerButton from 'src/components/ReferencePickerButton.vue'
 
+const alternate = [
+  1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  2, 2, 2, 2, 2,
+  1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  2, 2, 2, 2,
+  0,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  2
+]
+
 // arrow_back, done, check_circle, checklist
 export default {
   data() {
     return {
+      alternate,
       bookIndex: -1,
       chapterIndex: -1,
       verseIndex: -1,
@@ -72,12 +91,6 @@ export default {
   computed: {
     books() {
       return books.bookAbbreviations[this.$store.getters['bibles/lang']]
-    },
-    oldTestament() {
-      return this.books.slice(0, 39)
-    },
-    newTestament() {
-      return this.books.slice(39, 66)
     },
     chapters() {
       if (!this.isBookSelected) return []
@@ -138,7 +151,7 @@ export default {
     },
     finish() {
       if (!this.isChapterSelected) this.chapterIndex = 0
-      if (!this.isVerseSelected) this.verseIndex = 0
+      // if (!this.isVerseSelected) this.verseIndex = 0
       this.$store.commit('search/chapterFragment', [this.bookIndex, this.chapterIndex, this.verseIndex, this.verseIndex])
       this.$store.commit('search/showPicker', false)
       this.bookIndex = -1

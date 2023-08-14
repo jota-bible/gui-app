@@ -126,6 +126,7 @@ function applyDarkMode() {
     colors.setBrand('border', colors.lighten(background, 20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, 10))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, 20))
+    colors.setBrand('alternate', colors.lighten(colors.getBrand('primary'), 20))
   } else {
     const primary = '#1976D2'
     const secondary = '#1976D2'
@@ -143,6 +144,7 @@ function applyDarkMode() {
     colors.setBrand('border', colors.lighten(background, -20))
     colors.setBrand('scrollbar-thumb', colors.lighten(background, -15))
     colors.setBrand('scrollbar-thumb-hover', colors.lighten(background, -30))
+    colors.setBrand('alternate', colors.lighten(colors.getBrand('primary'), 20))
   }
 }
 
