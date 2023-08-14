@@ -10,8 +10,17 @@ export const defaultState = {
   darkMode: true,
   defaultBible: 'Uwspółcześniona Biblia Gdańska (2017)',
   defaultFormat: '',
+  defaultFormatTemplate: 'Polska prezentacja',
+  defaultFormatByLocale: {
+    en: '',
+    pl: ''
+  },
   defaultSearchResultLayout: 'formatted',
   example: 1,
+  formatTemplates: [
+    { name: 'English presentation', pattern: {} },
+    { name: 'Polska prezentacja', pattern: {} },
+  ],
   format1: '${book} ${chapter}${separator}${start} "${text}"',
   format2: '${book} ${chapter}${separator}${start}-${end} "${textWithNumbers}"',
   format3: '${book} ${chapter}${separator}${start}-${end} ${textWithNewLines}',

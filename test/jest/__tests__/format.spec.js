@@ -11,22 +11,22 @@ const separator = ':'
 
 describe('Jota', () => {
   it('formats with verse numbers', () => {
-    const template = '${book} ${chapter} "${textWithNumbers}"'
+    const template = '${book} ${chapter} "${textNumbers}"'
     expect(format(bible, [0, 0], template, bookNames)).toBe('Gen 1 "(1) a (2) b (3) c"')
-    expect(format(bible, [0, 0, 0], template, bookNames)).toBe('Gen 1 "(1) a"')
+    expect(format(bible, [0, 0, 0], template, bookNames)).toBe('Gen 1 "a"')
     expect(format(bible, [0, 0, 0, 1], template, bookNames)).toBe('Gen 1 "(1) a (2) b"')
     expect(format(bible, [0, 0, 1, 2], template, bookNames)).toBe('Gen 1 "(2) b (3) c"')
   })
 
   it('formats with verse numbers and new lines', () => {
-    const template = '${book} ${chapter}${separator}${start}-${end} "${textWithNewLines}"'
+    const template = '${book} ${chapter}${separator}${start}-${end} "${textNumbersNewLines}"'
     expect(format(bible, [0, 0, 1, 2], template, bookNames, separator)).toBe('Gen 1:2-3 "\n(2) b\n(3) c"')
   })
 
   it('formats verse ranges', () => {
     const template = '${book} ${chapter}${separator}${start}-${end} "${text}"'
     expect(format(bible, [0, 0], template, bookNames, separator)).toBe('Gen 1:1-3 "a b c"')
-    expect(format(bible, [0, 0, 0], template, bookNames, separator)).toBe('Gen 1:1-1 "a"')
+    expect(format(bible, [0, 0, 0], template, bookNames, separator)).toBe('Gen 1:1 "a"')
     expect(format(bible, [0, 0, 0, 1], template, bookNames, separator)).toBe('Gen 1:1-2 "a b"')
   })
 

@@ -110,17 +110,24 @@ const jota = {
     const start = isNaN(si) ? 1 : si + 1
     const end = isNaN(ei) ? isNaN(si) ? content.length : si + 1 : ei + 1
     const verses = content.slice(start - 1, end)
+    if (start === end) template = template.replace('-${end}', '')
 
     // eslint-disable-next-line no-unused-vars
     const verse = start
     // eslint-disable-next-line no-unused-vars
     const translationUpperCase = translation ? translation.toUpperCase() : ''
     // eslint-disable-next-line no-unused-vars
-    let text, textWithNumbers, textWithNewLines
-    if (template.includes('NewLines')) {
-      textWithNewLines = '\n' + (verses.map((v, i) => `(${start + i}) ${v}`).join('\n'))
-    } else if (template.includes('Numbers')) {
-      textWithNumbers = verses.map((v, i) => `(${start + i}) ${v}`).join(' ')
+    let text, textNumbers, textNewLines, textNumbersNewLines
+    const includesNumbers = template.includes('Numbers')
+    const includesNewLines = template.includes('NewLines')
+    const oneVerse = start === end
+
+    if (includesNumbers && includesNewLines) {
+      textNumbersNewLines = oneVerse ? verses.join(' ') : '\n' + (verses.map((v, i) => `(${start + i}) ${v}`).join('\n'))
+    } else if (includesNewLines) {
+      textNewLines = oneVerse ? verses.join(' ') : '\n' + verses.join('\n')
+    } else if (includesNumbers) {
+      textNumbers = oneVerse ? verses.join(' ') : verses.map((v, i) => `(${start + i}) ${v}`).join(' ')
     } else {
       text = verses.join(' ')
     }
@@ -429,6 +436,20 @@ const jota = {
     const a = [...osis.matchAll(/(\w+)\.(\d+)\.?(\d+)?/g)][0] || [null, osis]
     return [osisBooks.indexOf(a[1]), a[2] - 1, a[3] - 1]
   },
+
+  pattern2template(pattern) {
+     // ${book} ${chapter}${separator}${start}-${end} "${textWithNumbers}"
+     const { referencePosition, referenceNewLine, separatorChar, quotes, verseNewLine, numbers } = pattern
+     const ref = `\${book} \${chapter}${separatorChar}\${start}-\${end}`
+     let s = `\${text${numbers ? 'Numbers' : ''}${verseNewLine ? 'NewLines' : ''}}`
+     if (quotes) s = `"${s}"`
+     if (referencePosition === 'before') {
+       s = `${ref}${referenceNewLine === 'new line' ? '\n' : ' '}${s}`
+     } else {
+       s = `${s}${referenceNewLine === 'new line' ? '\n' : ' '}${ref}`
+     }
+     return s
+  }
 }
 
 if (process.env.DEV) window.jota = jota
