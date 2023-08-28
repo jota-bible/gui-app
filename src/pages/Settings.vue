@@ -122,9 +122,11 @@
         <br />
         ${text} - tekst bez numerów wersetów
         <br />
-        ${textWithNumbers} - tekst z numerami wersetów
+        ${textNumbers} - tekst z numerami wersetów
         <br />
-        ${textWithNewLines} - tekst z numerami wersetów i każdy od nowej linii
+        ${textNewLines} - tekst z każdym wersetem od nowej linii
+        <br />
+        ${textNumbersNewLines} - tekst z numerami wersetów i każdy od nowej linii
         <br />
         ${translation} - symbol przekładu
         <br />

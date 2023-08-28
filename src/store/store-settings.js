@@ -2,10 +2,11 @@ import { Dark, colors } from 'quasar'
 import books from 'src/logic/books'
 import jota from 'src/logic/jota'
 
-const localStorageKey = 'com.github.jota-bible.jota-app/settings'
+const localStorageKey = 'pl.netanel.jota.settings'
 const data = JSON.parse(localStorage.getItem(localStorageKey))
 
 export const defaultState = {
+  version: '0.5.0',
   bookNames: books.bookAbbreviations.pl.join(', '),
   darkMode: true,
   defaultBible: 'Uwspółcześniona Biblia Gdańska (2017)',
@@ -22,8 +23,8 @@ export const defaultState = {
     { name: 'Polska prezentacja', pattern: {} },
   ],
   format1: '${book} ${chapter}${separator}${start} "${text}"',
-  format2: '${book} ${chapter}${separator}${start}-${end} "${textWithNumbers}"',
-  format3: '${book} ${chapter}${separator}${start}-${end} ${textWithNewLines}',
+  format2: '${book} ${chapter}${separator}${start}-${end} "${textNumbers}"',
+  format3: '${book} ${chapter}${separator}${start}-${end} ${textNumbersNewLines}',
   lastRoute: '',
   plan: '',
   planStartDate: '',
@@ -117,6 +118,18 @@ const actions = {
 function saveToLocalStorage() {
   localStorage.setItem(localStorageKey, JSON.stringify(state))
 }
+
+function migrate(storedVersion) {
+  if (!storedVersion) {
+    const changeFormat = s => { state[s] = state[s].replace('textWithNumbers', 'textNumbers').replace('textWithNewLines', 'textNumbersNewLines') }
+    changeFormat('format1')
+    changeFormat('format2')
+    changeFormat('format3')
+    saveToLocalStorage()
+  }
+}
+
+migrate(data && data.version)
 
 function applyDarkMode() {
   if (Dark.isActive) {

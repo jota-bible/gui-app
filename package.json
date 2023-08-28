@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "jota-parser": "^1.0.3",
+    "jota-parser": "^1.0.4",
     "node-sass": "^4.14.1",
     "quasar": "^1.15.4"
   },
