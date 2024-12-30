@@ -1,4 +1,4 @@
-name: Cypress Tests
+name: Testing
 
 on: 
   push:
@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  cypress-run:
+  run-tests:
     runs-on: ubuntu-24.04
     steps:
       # Step 1: Checkout the repository
@@ -23,11 +23,11 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install Dependencies
-        run: pnpm install
+        run: npm install
 
       # Step 4: Run Vitest tests
       - name: Run Vitest Tests
-        run: pnpm run test:unit:ci 
+        run: npm run test:unit:ci 
 
       - name: Run Cypress Tests
-        run: pnpm run test:e2e:ci
+        run: npm run test:e2e:ci
