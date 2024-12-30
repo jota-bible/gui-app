@@ -1,0 +1,33 @@
+name: Cypress Tests
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-24.04
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Adjust Node.js version as per your project
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: pnpm install
+
+      # Step 4: Run Vitest tests
+      - name: Run Vitest Tests
+        run: pnpm run test:unit:ci 
+
+      - name: Run Cypress Tests
+        run: pnpm run test:e2e:ci
